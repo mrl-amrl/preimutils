@@ -1,13 +1,16 @@
 # PreImutils
 ---
-> AMRL lab utils for PreTrain your dataset specialy for PASCAL_VOC format
+> AMRL lab utils for Pretrain your dataset specialy for PASCAL_VOC format
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Made in MRL](https://img.shields.io/badge/Made%20in-Mechatronic%20Research%20Labratories-red.svg)](https://www.qiau.ac.ir/)
 ## Feature
-- [# PreImutils](#h1-id%22preimutils-185%22preimutilsh1)
+- [# PreImutils](#h1-id%22preimutils-111%22preimutilsh1)
 - [Feature](#feature)
+- [Installation](#installation)
+  - [Build from source](#build-from-source)
+  - [Get from PyPI](#get-from-pypi)
 - [Prepair Your dataset](#prepair-your-dataset)
 - [Download dataset](#download-dataset)
 - [Labeling](#labeling)
@@ -40,6 +43,18 @@
   - [How to use terminal](#how-to-use-terminal-7)
 - [Statistics of your Dataset labels](#statistics-of-your-dataset-labels)
   - [How to use in code](#how-to-use-in-code-8)
+
+## Installation 
+### Build from source
+```sh 
+git clone https://github.com/mrl-amrl/preimutils.git
+sudo pip3 install -r requirements/requirements-linux-python3.txt
+```
+### Get from PyPI
+```sh
+sudo pip3 install preimutils
+```
+
 ## Prepair Your dataset
 
 Every thing that you need to preprocces your data is here 

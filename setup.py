@@ -6,7 +6,7 @@ setup(
     version="1.0.0",
     description="all you need to prepare and preprocess your annotated images",
     url="https://github.com/mrl-amrl/preimutils",
-    download_url='https://github.com/mrl-amrl/preimutils/archive/0.0.1.tar.gz',
+    download_url='https://github.com/mrl-amrl/preimutils/archive/1.0.0.tar.gz',
     author="Amir Sharifi",
     author_email="ami_rsh@outlook.com",
     license='MIT',
