@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="preimutils",
     packages=['preimutils'],
-    version="1.0.1",
+    version="1.0.2",
     description="all you need to prepare and preprocess your annotated images",
     url="https://github.com/mrl-amrl/preimutils",
     download_url='https://github.com/mrl-amrl/preimutils/archive/1.0.0.tar.gz',
