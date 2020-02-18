@@ -1,0 +1,17 @@
+image: python:3.6-alpine
+stages:
+  - deploy
+before_script:
+  - pip3 install --upgrade pip3
+  - pip3 install setuptools wheel twine
+
+deploy_production:
+  stage: deploy
+  variables:
+    TWINE_USERNAME: $PRODUCTION_USERNAME
+    TWINE_PASSWORD: $PRODUCTION_PASSWORD
+  script:
+    - python3 setup.py sdist bdist_wheel
+    - twine upload dist/*
+  only:
+    - tags
