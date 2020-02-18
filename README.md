@@ -6,7 +6,7 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Made in MRL](https://img.shields.io/badge/Made%20in-Mechatronic%20Research%20Labratories-red.svg)](https://www.qiau.ac.ir/)
 ## Feature
-- [# PreImutils](#h1-id%22preimutils-111%22preimutilsh1)
+- [# PreImutils](#h1-id%22preimutils-74%22preimutilsh1)
 - [Feature](#feature)
 - [Installation](#installation)
   - [Build from source](#build-from-source)
@@ -99,8 +99,8 @@ First of all create a json file like this that contain all of your labels in a .
 }
 ```
 ## Download dataset 
-    For downloading your dataset I suggest you to use google_images_download package easy to use 
-    `pip install google_images_download`
+For downloading your dataset I suggest you to use  [google_images_download](https://github.com/hardikvasa/google-images-download)  package easy to use 
+`pip install google_images_download`
 ## Labeling
 
 >**For labeling (bounding box) I suggest you to use  [labelImg](https://github.com/tzutalin/labelImg) and suggest to label in PASCAL_VOC mode beacuse you can easily work on in and convert to coco and yolo.**
@@ -154,7 +154,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=xml_address_changer
 
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR
 ```
 
 
@@ -182,7 +182,7 @@ JSON_PATH=~/YOUR_JSON_PATH/label.json
 XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=label_checker
-python run.py  --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR  --images_dir $IMAGES_DIR
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR  --images_dir $IMAGES_DIR
 ```
 
 ### Replace label 
@@ -208,7 +208,7 @@ DST_LABEL=YOUR_CORRECT_LABEL
 SOURCE_LABEL=YOUR_WRONG_LABEL
 FUNCTION=replace_label
 
-python run.py --function $FUNCTION --label_json_path $JSON_PATH  --xmls_dir $XMLS_DIR --label $SOURCE_LABEL --dst_label $DST_LABEL
+preimutils --function $FUNCTION --label_json_path $JSON_PATH  --xmls_dir $XMLS_DIR --label $SOURCE_LABEL --dst_label $DST_LABEL
 ```
 
 ## Crop from point
@@ -231,7 +231,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 FUNCTION=cut_with_object_names
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE --images_dir $IMAGES_DIR
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE --images_dir $IMAGES_DIR
 ```
 
 ## Seprate with label
@@ -269,7 +269,7 @@ JSON_PATH=~/YOUR_JSON_PATH/label.json
 XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=seprate_with_label
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR
 ```
 
 ## Shuffle dataset images and annotations
@@ -289,7 +289,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 FUNCTION=shuffle_img_xml
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dst_save $DST_SAVE
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dst_save $DST_SAVE
 ```
 
 ## Image augmentation
@@ -328,7 +328,7 @@ FUNCTION=auto_augmentation
 QUANTITY=1000 # the amount of each object to create
 
 
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY
 ```
 2. Resize
 ```sh
@@ -340,7 +340,7 @@ QUANTITY=1000 # the amount of each object to create
 RESIZE=True # If you want to resize You should set WIDTH and WIDTH param
 WIDTH=300
 HEIGHT=300
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY --resize $RESIZE --width $WIDTH --height $HEIGHT
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY --resize $RESIZE --width $WIDTH --height $HEIGHT
 ```
 
 ## Train validate seprator
@@ -358,7 +358,7 @@ IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DATASET_PATH=~/DATASET_PATH/
 VALIDATION_PERSENT=0.3
 FUNCTION=seperate_test_val
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dataset_dir $DATASET_PATH --validation_persent $VALIDATION_PERSENT
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dataset_dir $DATASET_PATH --validation_persent $VALIDATION_PERSENT
 ```
 
 ## XML to csv converting
@@ -373,7 +373,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 VALIDATION_PERSENT=0.3
 FUNCTION=xml_to_csv
-python run.py --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE
+preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE
 ```
 
 ## Statistics of your Dataset labels
