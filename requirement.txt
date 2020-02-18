@@ -1,3 +1,4 @@
 pascal_voc_writer
 tqdm
 pandas
+albumentations

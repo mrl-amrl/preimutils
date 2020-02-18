@@ -18,7 +18,8 @@ setup(
     install_requires=[
         'pascal_voc_writer',
         'tqdm',
-        'pandas'
+        'pandas',
+        'albumentations',
     ],
     zip_safe=False,
 )
