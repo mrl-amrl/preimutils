@@ -48,7 +48,8 @@
 ### Build from source
 ```sh 
 git clone https://github.com/mrl-amrl/preimutils.git
-sudo pip3 install -r requirements/requirements-linux-python3.txt
+cd preimutils
+sudo pip3 install -r requirements.txt
 ```
 ### Get from PyPI
 ```sh
