@@ -5,7 +5,7 @@ import shutil
 from tqdm import tqdm
 
 
-def seperate_test_val(images_dir, xmls_dir, dst_validatoion_dir, dst_train_dir, validation_percentage = 0.2):
+def separate_test_val(images_dir, xmls_dir, dst_validatoion_dir, dst_train_dir, validation_percentage = 0.2):
     """
     Seperating Train and validation to their related directories
     Args:

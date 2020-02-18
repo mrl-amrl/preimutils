@@ -3,8 +3,8 @@
 import argparse
 from preimutils.annotations_xml import AnnotationsXML
 import albumentations as A
-# from scripts.label_json import LabelHandeler
-from preimutils import LabelHandeler
+# from scripts.label_json import LabelHandler
+from preimutils import LabelHandler
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +13,7 @@ import sys
 import os
 import glob
 from tqdm import tnrange, tqdm
-from preimutils.seprate_with_label import export_path_count_for_each_label
+from preimutils.separate_with_label import export_path_count_for_each_label
 sys.path.insert(0, os.path.dirname(__file__))
 
 
@@ -22,7 +22,7 @@ BOX_COLOR = (255, 0, 0)
 TEXT_COLOR = (255, 255, 255)
 
 
-class AmrlImageAug:
+class AMRLImageAug:
     """A wrapper class on albumentations package to work on pascal voc format easily
 
     Longer class information....
@@ -52,7 +52,7 @@ class AmrlImageAug:
         """
 
         assert os.path.exists(json_label_path), 'Json file not exist'
-        label_handeler = LabelHandeler(json_label_path)
+        label_handeler = LabelHandler(json_label_path)
 
         self._categori_label_id = label_handeler.json_label_id_dic()
         self._categori_id_label = label_handeler.json_id_label_dic()
@@ -64,7 +64,7 @@ class AmrlImageAug:
         assert os.path.exists(
             images_dir), 'Image path not exist please check the image path'
         self.images_dir = images_dir
-        self._annotations_handeler = AnnotationsXML(
+        self._annotations_handler = AnnotationsXML(
             self.images_dir, self.xmls_dir)
 
     def load_image(self, path):
@@ -142,13 +142,13 @@ class AmrlImageAug:
             filters_of_aug.append(A.Resize(width, height, always_apply=True))
         aug = self.get_aug(filters_of_aug)
         for i in tqdm(range(quantity), desc='Singel image'):
-            annotations = self._annotations_handeler.parse_pascal_voc(
+            annotations = self._annotations_handler.parse_pascal_voc(
                 xml_file_path, self._categori_label_id)
 
             augmented = aug(**annotations)
-            AmrlImageAug.file_counter += 1
-            file_name = 'aug_image{}'.format(AmrlImageAug.file_counter)
-            self._annotations_handeler.pascal_image_voc_writer(
+            AMRLImageAug.file_counter += 1
+            file_name = 'aug_image{}'.format(AMRLImageAug.file_counter)
+            self._annotations_handler.pascal_image_voc_writer(
                 augmented, file_name, self._categori_id_label)
 
     def auto_augmentation(self, count_of_each, resize=False, width=0, height=0):
@@ -192,5 +192,5 @@ if __name__ == "__main__":
     xmls_dir = args["xmls_dir"]
     json_path = args['label_json_path']
     quantity = args["quantity"]
-    img_aug = AmrlImageAug(json_path, xmls_dir, images_dir)
+    img_aug = AMRLImageAug(json_path, xmls_dir, images_dir)
     img_aug.auto_augmentation(quantity)

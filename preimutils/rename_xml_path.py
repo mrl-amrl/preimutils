@@ -3,7 +3,7 @@ import glob
 import xml.etree.ElementTree as ET
 import argparse
 from tqdm import tqdm
-from preimutils import LabelHandeler
+from preimutils import LabelHandler
 
 
 def xml_address_changer(xmls_dir, images_dir):

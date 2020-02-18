@@ -2,7 +2,7 @@ import json
 # '/home/amrl/CNN/Hazmats/label.json'
 
 
-class LabelHandeler:
+class LabelHandler:
     def __init__(self,json_path):
         self.json_path = json_path
         

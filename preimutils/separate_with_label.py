@@ -2,7 +2,7 @@ import os
 import glob
 import xml.etree.ElementTree as ET
 from tqdm import tqdm
-from preimutils import LabelHandeler
+from preimutils import LabelHandler
 import shutil
 
 
@@ -50,7 +50,7 @@ def export_path_count_for_each_label(xmls_dir, images_dir, labels):
     return labels_statistics
 
 
-def seprate_with_label(xmls_dir, images_dir, labels_array):
+def separate_with_label(xmls_dir, images_dir, labels_array):
     """Seprate your dataset with their labels in seprate folder path
 
     Args:
@@ -96,7 +96,7 @@ def seprate_with_label(xmls_dir, images_dir, labels_array):
 
 
 def gather_together(labels, dataset_dir):
-    """Gather together images and their annotation.Use after doing seprate_with_label this method
+    """Gather together images and their annotation.Use after doing separate_with_label this method
     Args:
         xmls_dir: all xmls files directory.
         dataset_dir: dataset directory.

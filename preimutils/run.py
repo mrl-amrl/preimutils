@@ -1,7 +1,7 @@
 import argparse
 import os
-from preimutils import LabelHandeler, AmrlImageAug, label_checker, replace_label, cut_with_object_names, xml_address_changer
-from preimutils import seprate_with_label, gather_together, shuffle_img_xml,seperate_test_val,seperate_test_val,xml_csv_save
+from preimutils import LabelHandler, AMRLImageAug, label_checker, replace_label, cut_with_object_names, xml_address_changer
+from preimutils import separate_with_label, gather_together, shuffle_img_xml,separate_test_val,separate_test_val,xml_csv_save
 
 
 
@@ -40,9 +40,9 @@ def main():
 
     ap.add_argument("-f", "--function", required=True,
                     choices=["auto_augmentation", "label_checker", "replace_label",
-                             "cut_with_object_names", "seprate_with_label",
+                             "cut_with_object_names", "separate_with_label",
                              "gather_together", "shuffle_img_xml",
-                             "seperate_test_val","xml_to_csv",'xml_address_changer'] ,help="function that you want to run")
+                             "separate_test_val","xml_to_csv",'xml_address_changer'] ,help="function that you want to run")
 
     args = vars(ap.parse_args())
     # Auto augment
@@ -63,14 +63,14 @@ def main():
     # For replace_label only
     destination_label = args["dst_label"]
     assert os.path.exists(json_path), 'json file path not exist'
-    label_handler = LabelHandeler(json_path)
+    label_handler = LabelHandler(json_path)
     persentage = args['validation_persent']
     # assert os.path.exists(images_dir), 'images_dir not exist'
     if function == "auto_augmentation":
         assert os.path.exists(xmls_dir), 'xmls path not exist'
         assert os.path.exists(images_dir), 'images path not exist'
         assert quantity > 0, 'Quantity < 0 not acceptable'
-        img_aug = AmrlImageAug(json_path, xmls_dir, images_dir)
+        img_aug = AMRLImageAug(json_path, xmls_dir, images_dir)
         img_aug.auto_augmentation(quantity,resize=resize,width=width,height=height)
 
     if function == "label_checker":
@@ -97,11 +97,11 @@ def main():
         assert os.path.exists(images_dir), 'images path not exist'
         xml_address_changer(xmls_dir, images_dir)
 
-    if function == "seprate_with_label":
+    if function == "separate_with_label":
         assert os.path.exists(xmls_dir), 'xmls path not exist'
         assert os.path.exists(images_dir), 'images path not exist'
         labels_array = label_handler.json_label_array()
-        seprate_with_label(xmls_dir, images_dir, labels_array)
+        separate_with_label(xmls_dir, images_dir, labels_array)
 
     if function == "gather_together":
         assert os.path.exists(dataset_dir), 'dataset path not exist'
@@ -116,13 +116,13 @@ def main():
         shuffle_img_xml(xmls_dir, images_dir, dst_save)
 
 
-    if function == "seperate_test_val":
+    if function == "separate_test_val":
         assert os.path.exists(xmls_dir), 'xmls path not exist'
         assert os.path.exists(images_dir), 'images path not exist'
         assert persentage > 0, 'persentage LE than 0 not acceptable'
         train_path = os.path.join(dataset_dir,'train')
         validation_path = os.path.join(dataset_dir,'validation')
-        seperate_test_val(images_dir,xmls_dir,validation_path,train_path,persentage)
+        separate_test_val(images_dir,xmls_dir,validation_path,train_path,persentage)
         
 
     if function == "xml_to_csv":
