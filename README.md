@@ -6,7 +6,7 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Made in MRL](https://img.shields.io/badge/Made%20in-Mechatronic%20Research%20Labratories-red.svg)](https://www.qiau.ac.ir/)
 ## Feature
-- [# PreImutils](#h1-id%22preimutils-74%22preimutilsh1)
+- [# PreImutils](#h1-id%22preimutils-94%22preimutilsh1)
 - [Feature](#feature)
 - [Installation](#installation)
   - [Build from source](#build-from-source)
@@ -182,6 +182,7 @@ JSON_PATH=~/YOUR_JSON_PATH/label.json
 XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=label_checker
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR  --images_dir $IMAGES_DIR
 ```
 
@@ -231,6 +232,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 FUNCTION=cut_with_object_names
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE --images_dir $IMAGES_DIR
 ```
 
@@ -269,6 +271,7 @@ JSON_PATH=~/YOUR_JSON_PATH/label.json
 XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=seprate_with_label
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR
 ```
 
@@ -289,6 +292,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 FUNCTION=shuffle_img_xml
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dst_save $DST_SAVE
 ```
 
@@ -327,7 +331,6 @@ IMAGES_DIR=~/YOUR_IMAGES_DIR/
 FUNCTION=auto_augmentation
 QUANTITY=1000 # the amount of each object to create
 
-
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY
 ```
 2. Resize
@@ -340,6 +343,7 @@ QUANTITY=1000 # the amount of each object to create
 RESIZE=True # If you want to resize You should set WIDTH and WIDTH param
 WIDTH=300
 HEIGHT=300
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY --resize $RESIZE --width $WIDTH --height $HEIGHT
 ```
 
@@ -358,6 +362,7 @@ IMAGES_DIR=~/YOUR_IMAGES_DIR/
 DATASET_PATH=~/DATASET_PATH/
 VALIDATION_PERSENT=0.3
 FUNCTION=seperate_test_val
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --dataset_dir $DATASET_PATH --validation_persent $VALIDATION_PERSENT
 ```
 
@@ -373,6 +378,7 @@ XMLS_DIR=~/YOUR_ANNOTATION_DIR/
 DST_SAVE=~/YOUR_DESTINATION_DIR/
 VALIDATION_PERSENT=0.3
 FUNCTION=xml_to_csv
+
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --dst_save $DST_SAVE
 ```
 
