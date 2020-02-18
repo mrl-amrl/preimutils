@@ -1,9 +1,10 @@
-image: python:3.6-alpine
+image: ubuntu:bionic
 stages:
   - deploy
 before_script:
-  - pip install --upgrade pip
-  - pip install setuptools wheel twine
+  - apt -y update
+  - apt -y install python3-pip
+  - pip3 install setuptools wheel twine
 
 deploy_production:
   stage: deploy

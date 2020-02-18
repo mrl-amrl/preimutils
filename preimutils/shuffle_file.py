@@ -9,11 +9,11 @@ import shutil
 
 def shuffle_img_xml(xmls_dir, images_dir, dst_dir):
     """
-    Shuffeling images and save in the destination path
+    Shuffling images and save in the destination path
     Args:
         xmls_dir: all xmls files directory.
         images_dir: your images directory.
-        dst_dir:destination directory to save after suffleing
+        dst_dir:destination directory to save after shuffling
 
     Returns:
         No return
