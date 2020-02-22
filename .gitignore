@@ -101,7 +101,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-test/
 .idea/
 
 # Setuptools distribution folder.

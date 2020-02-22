@@ -1,0 +1,15 @@
+{
+    "1": "poison",
+    "2": "oxygen",
+    "3": "flammable",
+    "4": "flammable-solid",
+    "5": "corrosive",
+    "6": "dangerous",
+    "7": "non-flammable-gas",
+    "8": "organic-peroxide",
+    "9": "explosive",
+    "10": "radioactive",
+    "11": "inhalation-hazard",
+    "12": "spontaneously-combustible",
+    "13": "infectious-substance"
+}
