@@ -19,7 +19,7 @@ def label_checker(xmls_dir, classes_array):
     wrong_labels = set()
     for key in classes_array:
         labels[key] = 0
-    for xml_file in tqdm(glob.glob(xmls_dir + '/*.xml')):
+    for xml_file in tqdm(glob.glob(os.path.join(xmls_dir + '*.xml'))):
         tree = ET.parse(xml_file)
         root = tree.getroot()
         for member in root.findall('object'):

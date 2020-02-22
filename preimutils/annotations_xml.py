@@ -2,7 +2,7 @@ import cv2
 import xml.etree.ElementTree as ET
 import os
 import pascal_voc_writer as pascal
-
+from preimutils import export_image_path
 
 class AnnotationsXML:
     def __init__(self, images_dir, xmls_dir):
@@ -16,7 +16,7 @@ class AnnotationsXML:
         category_id = []
         tree = ET.parse(xml_file_path)
         root = tree.getroot()
-        imagepath_with_bounding_box['image_path'] = root.find('path').text
+        imagepath_with_bounding_box['image_path'] = export_image_path(xml_file_path,self.images_dir)
         for objects in root.findall('object'):
             class_names.append(objects[0].text)
             bboxs.append([int(objects[4][0].text),

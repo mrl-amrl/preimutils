@@ -1,12 +1,13 @@
 # PreImutils
 ---
+[![pipeline status](https://gitlab.com/mrl-amrl/preimutils/badges/master/pipeline.svg)](https://gitlab.com/mrl-amrl/preimutils/-/commits/master)
 > AMRL lab utils for Pretrain your dataset specialy for PASCAL_VOC format
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Made in MRL](https://img.shields.io/badge/Made%20in-Mechatronic%20Research%20Labratories-red.svg)](https://www.qiau.ac.ir/)
 ## Feature
-- [# PreImutils](#h1-id%22preimutils-6%22preimutilsh1)
+- [# PreImutils](#h1-id%22preimutils-2%22preimutilsh1)
 - [Feature](#feature)
 - [Installation](#installation)
   - [Build from source](#build-from-source)
