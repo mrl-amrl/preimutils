@@ -8,8 +8,8 @@ before_script:
   - pip3 install setuptools wheel twine
 
 
-  test:
-    stage: test
-    script:
-      - pip3 install .
-      - python3 test.py
+test:
+  stage: test
+  script:
+    - pip3 install .
+    - python3 test.py
