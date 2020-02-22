@@ -1,13 +1,15 @@
-image: ubuntu:bionic
+image: jjanzic/docker-python3-opencv:latest
 stages:
   - deploy
+  - test
 before_script:
   - apt -y update
   - apt -y install python3-pip
   - pip3 install setuptools wheel twine
 
-deploy_production:
-  stage: deploy
-  script:
-    - python3 setup.py sdist bdist_wheel
-    - twine upload dist/*
+
+  test:
+    stage: test
+    script:
+      - pip3 install .
+      - python3 test.py
