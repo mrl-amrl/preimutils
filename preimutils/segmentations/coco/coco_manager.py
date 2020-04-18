@@ -46,6 +46,88 @@ class COCOHandler:
         self.aug_filter.append(aug_filter)
         self.aug = self.create_transformer(self.aug_filter)
 
+    def pad_if_need_ds(self, images_dir, new_ds_path):
+        img_ids = self.coco.getImgIds()
+        for img_id in tqdm(img_ids):
+            try:
+                self.pad_if_need_image(images_dir, img_id)
+            except ValueError as e : 
+                print(e,img_id)
+                continue
+        self.save_dataset(new_ds_path)
+
+    def visualize_by_image_id(self, images_dir ,image_id):
+        image_info = self.coco.loadImgs(image_id)
+        image_path = self.get_image_path_from_id(
+            images_dir, image_id)
+        anns_index = self.coco.getAnnIds(image_id)
+        anns_info = self.coco.loadAnns(anns_index)
+        all_points = []
+        for ann in anns_info:
+            ann['seg_len'] = len(ann['segmentation'][0])
+            all_points.extend(ann['segmentation'][0])
+
+        image, points = self.prepair_image_point(
+            image_path, all_points)
+        self.visualize_points(image, points)
+
+    def pad_if_need_image(self, images_dir, image_id):
+        image_info = self.coco.loadImgs(image_id)
+        image_path = self.get_image_path_from_id(
+            images_dir, image_id)
+        anns_index = self.coco.getAnnIds(image_id)
+        anns_info = self.coco.loadAnns(anns_index)
+        all_points = []
+        for ann in anns_info:
+            ann['seg_len'] = len(ann['segmentation'][0])
+            all_points.extend(ann['segmentation'][0])
+
+        image, points = self.prepair_image_point(
+            image_path, all_points)
+
+        self.aug_filter = [A.PadIfNeeded(
+            p=1, min_height=1024, min_width=1024, border_mode=cv2.BORDER_CONSTANT)]
+        self.aug = self.create_transformer(self.aug_filter)
+        transformed = self.aug(image=image, keypoints=points)
+        keypoints = transformed['keypoints']
+        new_image = transformed['image']
+        
+        # remove old image and related annotations
+        self.remove_image_from_ds(image_id)
+        new_key_point = self.points_to_segmentations(keypoints)
+        new_height, new_width, _ = new_image.shape
+        new_image_id = image_info[0]['id']
+        new_image_name = str(new_image_id) + '.jpg'
+        self.add_image(new_width,
+                       new_height,
+                       new_image_id,
+                       new_image_name
+                       )
+        start_idx = 0
+        end_idx = 0
+        new_seg = []
+        for ann in anns_info:
+            start_idx = start_idx + end_idx
+            end_idx = end_idx + ann['seg_len']
+            new_seg = new_key_point[start_idx:end_idx]
+            try:
+                new_area = self.segment_area([new_seg], new_width, new_height)
+                new_bbox = self.segment_to_bbox(
+                    [new_seg], new_width, new_height)
+            except Exception:
+                print("ERROR", ann)
+            self.add_annotation(
+                ann['id'],
+                new_image_id,
+                ann['category_id'],
+                new_seg,
+                float(new_area),
+                list(new_bbox)
+            )
+        new_image_path = os.path.join(
+            images_dir, "test", new_image_name)
+        cv2.imwrite(new_image_path, new_image)
+
     def get_last_ann_id(self):
         last_id = 0
         ids = self.coco.getAnnIds()
@@ -65,6 +147,28 @@ class COCOHandler:
         if len(ids):
             image_id = max(ids)
         return image_id
+
+    def make_new_ds(self):
+        return {
+            "annotations": [],
+            "categories": [],
+            "licenses": [
+                {
+                    "id": 0,
+                    "url": "",
+                    "name": ""
+                }
+            ],
+            "info": {
+                "date_created": "",
+                "description": "",
+                "url": "",
+                "year": "",
+                "contributor": "",
+                "version": ""
+            },
+            "images": []
+        }
 
     def segment_area(self, segmentation, width, height):
         """get the area from coco annotation
@@ -202,7 +306,6 @@ class COCOHandler:
         return img, pair_points
 
     def augment_image(self, images_dir, image_id):
-
         image_info = self.coco.loadImgs(image_id)
         image_path = self.get_image_path_from_id(
             images_dir, image_id)
@@ -210,8 +313,6 @@ class COCOHandler:
         anns_info = self.coco.loadAnns(anns_index)
         all_points = []
         for ann in anns_info:
-            area = self.segment_area(
-                ann['segmentation'], image_info[0]['width'], image_info[0]['height'])
             ann['seg_len'] = len(ann['segmentation'][0])
             all_points.extend(ann['segmentation'][0])
 
@@ -221,7 +322,8 @@ class COCOHandler:
         transformed = self.aug(image=image, keypoints=points)
         keypoints = transformed['keypoints']
         new_image = transformed['image']
-        self.visualize_points(new_image, keypoints)
+        print(new_image.shape)
+        # self.visualize_points(new_image, keypoints)
 
         new_key_point = self.points_to_segmentations(keypoints)
         new_height, new_width, _ = new_image.shape
@@ -253,13 +355,10 @@ class COCOHandler:
             images_dir, "test", str(new_image_id))+".jpg"
         print(new_image_path)
 
-
-    def save_dataset(self,path):
+    def save_dataset(self, path):
         with open(path, 'w') as dataset_file:
             json.dump(self.coco.dataset, dataset_file)
 
-    def augment_coco(self, image_path, key_points):
-        pass
 
     def create_transformer(self, transformations):
         return A.Compose(transformations, p=1,
@@ -287,21 +386,18 @@ class COCOHandler:
 
         return statics
 
-    def remove_image_from_ds(self,image_id):
-
-        for ann in self.coco.dataset['images']:
-            if ann["id"] == image_id:
-                self.coco.dataset['images'].remove(ann)
+    def remove_image_from_ds(self, image_id):
+        for image in self.coco.dataset['images']:
+            if image["id"] == image_id:
+                self.coco.dataset['images'].remove(image)
         image_anns = []
-        for ann in self.coco.dataset['annotations']:
+        for ann in tqdm(self.coco.dataset['annotations'], desc='finding annotations'):
             if ann['image_id'] == image_id:
                 image_anns.append(ann)
-                # self.coco.dataset['annotations'].remove(ann)
-        for ann in image_anns :
+        for ann in tqdm(image_anns, desc='removing annotations'):
             self.coco.dataset['annotations'].remove(ann)
-        self.coco.createIndex()        
+        self.coco.createIndex()
 
-        
-        
+
 if __name__ == "__main__":
     pass

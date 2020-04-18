@@ -106,15 +106,15 @@ class AMRLImageAug:
         if your image and xml names are same
         save your aug image in your dataset path with the following pattern aug_{counter}.jpg
 
-    Args:
-        xml_file_path: single xml file path.
-        quantity: quantity for your image to augment
-        resize:(bool : optional)-> defult False ... resize your augmented images
-        width:(int : optional) width for resized ... if resize True you should use this arg
-        height:(int : optional) height for resized... if resize True you should use this arg
-    Returns:
-        No return
-    """
+        Args:
+            xml_file_path: single xml file path.
+            quantity: quantity for your image to augment
+            resize:(bool : optional)-> defult False ... resize your augmented images
+            width:(int : optional) width for resized ... if resize True you should use this arg
+            height:(int : optional) height for resized... if resize True you should use this arg
+        Returns:
+            No return
+        """
         filters_of_aug = [
 
             A.RandomSizedBBoxSafeCrop(
@@ -156,14 +156,14 @@ class AMRLImageAug:
         if your image and xml names are same
         save your aug image in your dataset path with the following pattern aug_{counter}.jpg
 
-    Args:
-        count_of_each(int): How much of each label you want to have !
-        resize:(bool : optional)-> defult False ... resize your augmented images
-        width:(int : optional) width for resized ... if resize True you should use this arg
-        height:(int : optional) height for resized... if resize True you should use this arg
-    Returns:
-        No return
-    """
+        Args:
+            count_of_each(int): How much of each label you want to have !
+            resize:(bool : optional)-> defult False ... resize your augmented images
+            width:(int : optional) width for resized ... if resize True you should use this arg
+            height:(int : optional) height for resized... if resize True you should use this arg
+        Returns:
+            No return
+        """
         labels_statistics = export_path_count_for_each_label(
             self.xmls_dir, self.images_dir, self._categori_label_id.keys())
         for label in tqdm(self._categori_label_id):
