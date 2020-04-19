@@ -1,10 +1,17 @@
+import os
+from glob import glob
+
 import albumentations as A
 import cv2
-import os
 from tqdm import tqdm
-from dataset_info import LabelMap
-import utils
+
 from count import export_path_count_for_each_label
+
+import utils
+from dataset_info import LabelMap
+from PIL import Image
+import numpy as np
+import imageio
 
 
 class SegmentationAug:
@@ -12,7 +19,7 @@ class SegmentationAug:
     """A wrapper class on albumentations package to work on voc segmentation format easily
 
     Attributes:
-        xmls_dir: annotations files paths.
+        mask_dir: masks files paths.
         images_dir: images files paths.
     """
 
@@ -28,7 +35,7 @@ class SegmentationAug:
             object4:128,128,0::
             object5:0,0,128::
             objectN:128,0,128::
-            mask_dir (str): annotations files paths.
+            masks_dir (str): annotations files paths.
             images_dir (str) :images files paths.
         """
 
@@ -65,6 +72,7 @@ class SegmentationAug:
             A.IAAPiecewiseAffine(p=0.1, scale=(0.01, 0.02)),
             A.IAAEmboss(p=0.2),
         ]
+
     def get_aug(self, aug):
         return A.Compose(aug)
 
@@ -100,7 +108,7 @@ class SegmentationAug:
             cv2.imwrite(nimage_path, nimage)
             cv2.imwrite(nmask_path, nmask)
 
-    def auto_augmentation(self,count_of_each):
+    def auto_augmentation(self, count_of_each):
         """auto augmentation for each picture depend on statistic of the object exist in your dataset
         if your image and xml names are same
         save your aug image in your dataset path with the following pattern aug_{counter}.jpg
@@ -113,7 +121,8 @@ class SegmentationAug:
         Returns:
             No return
         """
-        labels_statistics = export_path_count_for_each_label(self.label_handler.color_label(),self._images_dir,self._masks_dir)
+        labels_statistics = export_path_count_for_each_label(
+            self.label_handler.color_label(), self._images_dir, self._masks_dir)
         for label in tqdm(self.label_handler.label_color()):
             print(label)
             count = labels_statistics[label]['count']
@@ -125,3 +134,31 @@ class SegmentationAug:
             for mask in masks_paths:
                 self.augment_image(mask, coefficient)
 
+    def encode_mask_dataset(self, class_color):
+        """encode color map dataset masks to 1 channel mask used for most semantic segmentation models
+        save your encoded mask in your YOUR_MASK_PATH/pre_encoded
+
+        Args:
+            class_color(int):   [
+                                (r,g,b),
+                                (r,g,b),
+                                (r,g,b),
+                                ...
+                                ]
+            resize:(bool : optional)-> defult False ... resize your augmented images
+            width:(int : optional) width for resized ... if resize True you should use this arg
+            height:(int : optional) height for resized... if resize True you should use this arg
+        Returns:
+            No return
+        """
+        dst_path = os.path.join(self._masks_dir, 'pre_encoded')
+        if not os.path.exists(dst_path):
+            os.mkdir(dst_path)
+        
+        for mask_path in tqdm(glob(os.path.join(self._masks_dir, '*.png'))[:1]):
+            mask_basename = os.path.basename(mask_path)
+            mask = Image.open(mask_path)
+            mask = np.asarray(mask)
+            mask = utils.encode_segmap(mask, class_color)
+            mask = Image.fromarray(np.uint8(mask))
+            imageio.imwrite(os.path.join(dst_path, mask_basename), mask)
