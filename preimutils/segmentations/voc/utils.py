@@ -1,11 +1,12 @@
-from dataset_info import Dataset
+# from dataset_info import Dataset
 from glob import glob
 import os
 import cv2
 from tqdm import tqdm
 import numpy as np
+from matplotlib import pyplot as plt
 
-def encode_segmap(self, mask,class_color):
+def encode_segmap(mask,class_color):
     """Encode segmentation label images as pascal classes
     Args:
         mask (np.ndarray): raw segmentation label image of dimension
@@ -15,6 +16,8 @@ def encode_segmap(self, mask,class_color):
         (np.ndarray): class map with dimensions (M,N), where the value at
         a given location is the integer denoting the class index.
     """
+    print(class_color[11])
+    class_color = np.asarray(class_color)
     mask = mask.astype(int)
     label_mask = np.zeros((mask.shape[0], mask.shape[1]), dtype=np.int16)
     for ii, label in enumerate(class_color):
@@ -22,7 +25,8 @@ def encode_segmap(self, mask,class_color):
     label_mask = label_mask.astype(int)
     return label_mask
 
-def decode_segmap(self, label_mask, plot=False):
+
+def decode_segmap(label_mask,class_color, plot=False):
     """Decode segmentation class labels into a color image
     Args:
         label_mask (np.ndarray): an (M,N) array of integer values denoting
@@ -32,14 +36,13 @@ def decode_segmap(self, label_mask, plot=False):
     Returns:
         (np.ndarray, optional): the resulting decoded color image.
     """
-    label_colours = self.get_pascal_labels()
     r = label_mask.copy()
     g = label_mask.copy()
     b = label_mask.copy()
-    for ll in range(0, self.n_classes):
-        r[label_mask == ll] = label_colours[ll, 0]
-        g[label_mask == ll] = label_colours[ll, 1]
-        b[label_mask == ll] = label_colours[ll, 2]
+    for ll in range(0, len(class_color)):
+        r[label_mask == ll] = class_color[ll, 0]
+        g[label_mask == ll] = class_color[ll, 1]
+        b[label_mask == ll] = class_color[ll, 2]
     rgb = np.zeros((label_mask.shape[0], label_mask.shape[1], 3))
     rgb[:, :, 0] = r / 255.0
     rgb[:, :, 1] = g / 255.0
@@ -63,6 +66,8 @@ def find_image_from_mask(mask, images_dir):
     """
     mask = os.path.basename(mask)
     image_path = glob(os.path.join(images_dir, mask[:-4]+'*'))[0]
+    if not len(image_path):
+        raise ValueError("Image {} not found".format(images_dir, mask[:-4]+'*'))
     return image_path
 
 
