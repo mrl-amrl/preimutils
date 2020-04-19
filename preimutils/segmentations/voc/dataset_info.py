@@ -1,7 +1,12 @@
 import os
+from glob import glob
+from tqdm import tqdm
+import utils
+import random
+
 
 class LabelMap:
-    def __init__(self,label_map_path):
+    def __init__(self, label_map_path):
         # self.lines = []
         with open(label_map_path) as f:
             lines = f.readlines()
@@ -12,7 +17,7 @@ class LabelMap:
         for line in self.lines:
             line = line.split(':')
             color = tuple(line[1].split(','))
-            color = (int(color[0]),int(color[1]),int(color[2]))
+            color = (int(color[0]), int(color[1]), int(color[2]))
             label_map[line[0]] = color
         return label_map
 
@@ -21,9 +26,9 @@ class LabelMap:
         for line in self.lines:
             line = line.split(':')
             color = tuple(line[1].split(','))
-            color = (int(color[0]),int(color[1]),int(color[2]))
+            color = (int(color[0]), int(color[1]), int(color[2]))
             label_map[line[0]] = color
-            new_dic = {y:x for x,y in label_map.items()}
+            new_dic = {y: x for x, y in label_map.items()}
         return new_dic
 
     def color_list(self):
@@ -31,18 +36,115 @@ class LabelMap:
         for line in self.lines:
             line = line.split(':')
             color = tuple(line[1].split(','))
-            color = (int(color[0]),int(color[1]),int(color[2]))
+            color = (int(color[0]), int(color[1]), int(color[2]))
             colors.append(color)
         return colors
-class Dataset:
-    def __init__(self,dataset_dir):
-        self.dataset_dir = dataset_dir
-        self.segmentations_class_dir = os.path.join(dataset_dir,'SegmentationClass')
-        self.images_dir = os.path.join(dataset_dir,'JPEGImages')
-        self.segmentations_object_dir = os.path.join(dataset_dir,'SegmentationObject')
-        self.label_map_path = os.path.join(dataset_dir,'labelmap.txt')
 
-if __name__ == "__main__":
-    PATH = '/Users/amir/segmentations/hazmat-dataset/VOC2012/'
-    label_handler = LabelMap(PATH + '/labelmap.txt')
-    print(label_handler.color_list())
+
+class Dataset:
+    """Get dataset voc paths directly and some methods for work with it.
+
+
+    Longer class information....
+
+    Attributes:
+        masks_dir: SegmentationClass directory path 
+        images_dir: JPEGImages directory paths.
+        segmentations_object_dir : SegmentationObject directory path
+        label_map_path = labelmap.txt path
+    """
+
+    def __init__(self, dataset_dir):
+        self.__dataset_dir_model= """
+├── ImageSets
+│   └── Segmentation
+├── JPEGImages
+├── SegmentationClass
+├── SegmentationClassRaw
+└── SegmentationObject
+                                """
+        assert os.path.exists(
+            dataset_dir), 'dataset directory not exist in {}'.format(dataset_dir)
+        assert os.path.exists(os.path.join(dataset_dir, 'SegmentationClass')
+                              ), 'dataset SegmentationClass directory not exist dataset should be in this tree {}'.format(self.__dataset_dir_model)
+        assert os.path.exists(os.path.join(dataset_dir, 'JPEGImages')
+                              ), 'dataset JPEGImages directory not exist in {}'.format(dataset_dir)
+        assert os.path.exists(os.path.join(
+            dataset_dir, 'SegmentationObject')), 'dataset SegmentationObject directory not exist dataset should be in this tree {}'.format(self.__dataset_dir_model)
+        assert os.path.exists(os.path.join(dataset_dir, 'labelmap.txt')
+                              ), 'dataset labelmap.txt not exist dataset should be in this tree {}'.format(self.__dataset_dir_model)
+        # dataset successfully loaded
+        self._dataset_dir = dataset_dir
+        self.masks_dir = os.path.join(dataset_dir, 'SegmentationClass')
+        self.images_dir = os.path.join(dataset_dir, 'JPEGImages')
+        self.segmentations_object_dir = os.path.join(
+            dataset_dir, 'SegmentationObject')
+        self.label_map_path = os.path.join(dataset_dir, 'labelmap.txt')
+
+    def check_valid_dataset(self):
+        """Check for all masks images if there isn't related 
+            mask image print the work image path
+            - If image not exist raise ValueError
+            Args:
+                None
+            Returns:
+                None
+        """
+        for mask in glob(os.path.join(self.masks_dir, '*.png')):
+            utils.find_image_from_mask(mask, self.images_dir)
+
+    def seprate_dataset(self, shuffle=False, valid_persent=0.25, test_persent=None, save=True):
+        """Seprate dataset to train.txt,trainval.txt,val.txt 
+
+            Args:
+                valid_persentage:(float), should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the validation split.
+                 - If None,it will be set to 0.25.
+                test_persentage: (float), should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test split.
+                 - If None, that means you don't have test dataset just have train validation.
+                save :(bool), If True dataset save train.txt, trainval.txt, val.txt , if test_present exist test.txt
+            Returns:
+                None
+        """
+        total_masks_path = glob(os.path.join(self.masks_dir, '*.png'))
+        total_masks_path = map(
+            lambda x: os.path.basename(x[:-4]), total_masks_path)
+        total_masks_path = list(total_masks_path)
+
+        if shuffle:
+            random.shuffle(total_masks_path)
+
+        if test_persent:
+            print('in')
+            valid_len = round(len(total_masks_path) * valid_persent)
+            test_len = round (len(total_masks_path) * test_persent)
+            train_len = len(total_masks_path) - test_len - valid_len
+            train_ds = total_masks_path[:train_len]
+            remain_mask = total_masks_path[train_len:]
+            test_ds = remain_mask[:test_len]
+            valid_ds = remain_mask[test_len:]
+
+        else:
+            valid_len = round(len(total_masks_path) * valid_persent)
+            valid_ds = total_masks_path[:valid_len]
+            train_ds = total_masks_path[valid_len:]
+            test_ds = None
+
+        if save:
+            with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'trainval.txt'), 'w') as f:
+                f.write('\n'.join(total_masks_path))
+            with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'train.txt'), 'w') as f:
+                f.write('\n'.join(train_ds))
+            with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'val.txt'), 'w') as f:
+                f.write('\n'.join(valid_ds))
+            if test_persent:
+                print('inn')
+                with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'test.txt'), 'w') as f:
+                    f.write('\n'.join(test_ds))
+
+        return train_ds, valid_ds, test_ds
+
+        # return train_ds,test_ds,valid_ds
+# if __name__ == "__main__":
+#     PATH = '/Users/amir/segmentations/hazmat-dataset/VOC2012/'
+#     label_handler = LabelMap(PATH + '/labelmap.txt')
+#     print(label_handler.color_list(self.masks_dir))
