@@ -18,10 +18,10 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 nav : 
-    - Home: 'index.md'
+    - Home: 'home.md'
     - Installation : installation.md
     - Object Detection Dataset : object-detection.md 
     - Segmentation Dataset: segmentation.md
-    - '':
+    - 'Dataset':
       - 'VOC dataset': voc.md
       - 'COCO dataset': coco.md 
