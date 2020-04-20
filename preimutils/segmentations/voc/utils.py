@@ -5,6 +5,10 @@ import cv2
 from tqdm import tqdm
 import numpy as np
 from matplotlib import pyplot as plt
+import imutils
+import shutil
+
+
 
 def encode_segmap(mask,class_color):
     """Encode segmentation label images as pascal classes
@@ -102,3 +106,67 @@ def find_maxmin_size_images(images_dir):
         'max_height': max_height,
         'max_width': max_width
     }
+
+def unique_label_from_masks(masks_dir):
+    """get the unique colors(classes) from your masks
+
+    Args:
+        masks_dir:(str) your masks path.
+
+    Returns:
+        unique_colors : unique colors from your masks  -> list.
+    """
+    unique_colors = set()
+
+    for mask_path in tqdm(glob(os.path.join(masks_dir, '*.png'))):
+        mask = cv2.imread(mask_path)
+        orig = mask.copy()
+        gray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+        edged = imutils.auto_canny(gray)
+        ret, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
+        cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL,
+                                cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+
+        for i in range(len(cnts)):
+            mask_zero = np.zeros(mask.shape[:2], dtype="uint8")
+            cv2.drawContours(mask_zero, cnts, i, 255, thickness=cv2.FILLED)
+            mean = cv2.mean(mask, mask=mask_zero)[:3]
+            mean_rgb = (round(mean[2]), round(mean[1]), round(mean[0]))
+            unique_colors.add(mean_rgb)
+
+    unique_colors = list(unique_colors)
+    unique_colors.insert(0,(0,0,0))
+    return unique_colors
+
+def convert_to_voc(masks_dir,images_dir,target_dir):
+    """Convert your custom dataset to normal voc format
+
+    Args:
+        masks_dir:(str) your masks path.
+
+    Returns:
+        unique_colors : unique colors from your masks  -> list.
+    """
+    os.makedirs(target_dir,exist_ok=True)
+    seg_cls = os.path.join(target_dir,'SegmentationClass')
+    jpegimages = os.path.join(target_dir,'JPEGImages')
+    seg_object = os.path.join(target_dir,'SegmentationObject')
+    seg_txt = os.path.join(target_dir,'ImageSets','Segmentation')
+
+    os.makedirs(seg_cls,exist_ok=True)
+    os.makedirs(jpegimages,exist_ok=True)
+    os.makedirs(seg_object,exist_ok=True)
+    os.makedirs(seg_txt,exist_ok=True)
+
+    unique_colors = unique_label_from_masks(masks_dir)
+    label_map = ['label:color_rgb:parts:actions']
+    label_map.append('background:0,0,0::')
+    for i, color in enumerate(unique_colors):
+        label_map.append('object{}:{},{},{}::'.format(i+1,color[0],color[1],color[2]))
+    with open(os.path.join(target_dir,'labelmap.txt'),'w') as f:
+        f.write('\n'.join(label_map))
+    for mask in glob(os.path.join(masks_dir,'*.png')):
+        shutil.copy2(mask,seg_cls)
+    for image in glob(os.path.join(images_dir,'*.*')):
+        shutil.copy2(image,jpegimages)
