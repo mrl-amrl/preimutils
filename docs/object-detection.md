@@ -1,29 +1,9 @@
 
+![Bounding Box](imgs/object_detection.jpg)
 ## Prepare Your dataset
 
-Everything that you need to preprocess your data is here.
-One of the most important item for machine learning or CNN or other neural networks is preparing your dataset.
-1.  The amount of your dataset is really important. Not very few that lose the accuracy not great number of that lose your time and cause to overfitting, more than 4000 image per object is enough that mostly. depend on how much your feature is hard.
-2.  The amount of each object image is important if objects sample count not equal your neural network forget the lower object count for instance if you have 3 object each one should have 4000 sample.  
-    - No:
-        | object   | Sample Count |
-        | -------- | :----------: |
-        | object 1 |     2000     |
-        | object 2 |     1000     |
-        | object 3 |     4000     |
-    
-    - Yes :
-        | object   | Sample Count |
-        | -------- | :----------: |
-        | object 1 |     3900     |
-        | object 2 |     4100     |
-        | object 3 |     4000     |
-
-3. Don't forget to shuffle your dataset if you don't do that you never ever don't get good accuracy on all of your objects 
-4. If you want to detect your object from all angles don't forget to put sample from other angle
-First of all create a json file like this that contain all of your labels in a .json file to use this package
-
-**When use this utils please put your data in this pattern**
+!!! warning
+    **When use PreImutils object detection please put your data in this pattern**
 ```sh
 +dataset
     -label.json
@@ -31,6 +11,7 @@ First of all create a json file like this that contain all of your labels in a .
     +annotations
 ```
 **sample of label.json file**
+
 ```json
 {
     "1": "object1",
@@ -55,6 +36,7 @@ For downloading your dataset I suggest you to use  [google_images_download](http
 
 >**For labeling (bounding box) I suggest you to use  [labelImg](https://github.com/tzutalin/labelImg) and suggest to label in PASCAL_VOC mode because you can easily work on in and convert to coco and YOLO.**
 
+## Convert to Yolo
 **For converting to YOLO use [convert2Yolo](https://github.com/ssaru/convert2Yolo)**
 
 ## Rename image path in Annotations file

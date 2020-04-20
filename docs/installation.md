@@ -1,4 +1,3 @@
-## Installation 
 ### Build from source
 ```sh 
 git clone https://github.com/mrl-amrl/preimutils.git
