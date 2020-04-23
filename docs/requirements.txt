@@ -1,4 +1,3 @@
 mkdocs-material
 mkautodoc
 Cython
-preimutils
