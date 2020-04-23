@@ -2,7 +2,7 @@ import cv2
 import xml.etree.ElementTree as ET
 import os
 import pascal_voc_writer as pascal
-from preimutils import export_image_path
+from .crop_from_point import export_image_path
 
 class AnnotationsXML:
     def __init__(self, images_dir, xmls_dir):

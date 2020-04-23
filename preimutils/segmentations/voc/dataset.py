@@ -1,18 +1,51 @@
 import os
-from glob import glob
-from tqdm import tqdm
-import utils
 import random
+from glob import glob
+
+from tqdm import tqdm
+
+from . import utils
 
 
 class LabelMap:
+    """A class on to work and handel labelmap.txt classes
+
+    Attributes:
+
+        None
+
+    Args:
+
+        label_map_path (:obj:`str`): you should have a txt file like this
+
+            object1:0,0,0::
+            object2:128,0,0::
+            object3:0,128,0::
+            objectN:128,128,0::
+
+        masks_dir (str): annotations files paths.
+        images_dir (str) :images files paths.
+    """
     def __init__(self, label_map_path):
-        # self.lines = []
+
+
         with open(label_map_path) as f:
             lines = f.readlines()
         self.lines = lines[1:]
 
     def label_color(self):
+        """Export label_color dict 
+
+        Args:
+
+            None
+
+        Returns:
+
+            a dict of label:color
+            {label1:(r,g,b),labelN:(r,g,b)}
+
+        """
         label_map = {}
         for line in self.lines:
             line = line.split(':')
@@ -22,6 +55,17 @@ class LabelMap:
         return label_map
 
     def color_label(self):
+        """Export color_label dict 
+        
+        Args:
+
+            None
+
+        Returns:
+
+            a dict of label:color 
+            {(r,g,b):label1,(r,g,b):labelN}
+        """
         label_map = {}
         for line in self.lines:
             line = line.split(':')
@@ -32,6 +76,17 @@ class LabelMap:
         return new_dic
 
     def color_list(self):
+        """Export color_list in their saving order 
+
+        Args:
+
+            None
+
+        Returns:
+
+            list of colors
+            {(r,g,b),(rN,gN,bN)}
+        """
         colors = []
         for line in self.lines:
             line = line.split(':')
@@ -44,18 +99,24 @@ class LabelMap:
 class Dataset:
     """Get dataset voc paths directly and some methods for work with it.
 
-
-    Longer class information....
+        ├── ImageSets
+        │   └── Segmentation
+        ├── JPEGImages
+        ├── SegmentationClass
+        ├── SegmentationClassRaw
+        └── SegmentationObject 
 
     Attributes:
+
         masks_dir: SegmentationClass directory path 
         images_dir: JPEGImages directory paths.
         segmentations_object_dir : SegmentationObject directory path
         label_map_path = labelmap.txt path
+
     """
 
     def __init__(self, dataset_dir):
-        self.__dataset_dir_model= """
+        self.__dataset_dir_model = """
 ├── ImageSets
 │   └── Segmentation
 ├── JPEGImages
@@ -85,9 +146,13 @@ class Dataset:
         """Check for all masks images if there isn't related 
             mask image print the work image path
             - If image not exist raise ValueError
+
             Args:
+
                 None
+
             Returns:
+
                 None
         """
         for mask in glob(os.path.join(self.masks_dir, '*.png')):
@@ -97,12 +162,15 @@ class Dataset:
         """Seprate dataset to train.txt,trainval.txt,val.txt 
 
             Args:
+
                 valid_persentage:(float), should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the validation split.
-                 - If None,it will be set to 0.25.
+                 If None,it will be set to 0.25.
                 test_persentage: (float), should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test split.
-                 - If None, that means you don't have test dataset just have train validation.
+                 If None, that means you don't have test dataset just have train validation.
                 save :(bool), If True dataset save train.txt, trainval.txt, val.txt , if test_present exist test.txt
+
             Returns:
+
                 None
         """
         total_masks_path = glob(os.path.join(self.masks_dir, '*.png'))
@@ -116,7 +184,7 @@ class Dataset:
         if test_persent:
             print('in')
             valid_len = round(len(total_masks_path) * valid_persent)
-            test_len = round (len(total_masks_path) * test_persent)
+            test_len = round(len(total_masks_path) * test_persent)
             train_len = len(total_masks_path) - test_len - valid_len
             train_ds = total_masks_path[:train_len]
             remain_mask = total_masks_path[train_len:]
@@ -137,14 +205,7 @@ class Dataset:
             with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'val.txt'), 'w') as f:
                 f.write('\n'.join(valid_ds))
             if test_persent:
-                print('inn')
                 with open(os.path.join(self._dataset_dir, 'ImageSets', 'Segmentation', 'test.txt'), 'w') as f:
                     f.write('\n'.join(test_ds))
 
         return train_ds, valid_ds, test_ds
-
-        # return train_ds,test_ds,valid_ds
-# if __name__ == "__main__":
-#     PATH = '/Users/amir/segmentations/hazmat-dataset/VOC2012/'
-#     label_handler = LabelMap(PATH + '/labelmap.txt')
-#     print(label_handler.color_list(self.masks_dir))

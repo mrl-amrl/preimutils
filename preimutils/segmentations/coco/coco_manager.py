@@ -67,7 +67,7 @@ class COCOHandler:
             ann['seg_len'] = len(ann['segmentation'][0])
             all_points.extend(ann['segmentation'][0])
 
-        image, points = self.prepair_image_point(
+        image, points = self.prepare_image_point(
             image_path, all_points)
         self.visualize_points(image, points)
 
@@ -82,7 +82,7 @@ class COCOHandler:
             ann['seg_len'] = len(ann['segmentation'][0])
             all_points.extend(ann['segmentation'][0])
 
-        image, points = self.prepair_image_point(
+        image, points = self.prepare_image_point(
             image_path, all_points)
 
         self.aug_filter = [A.PadIfNeeded(
@@ -174,11 +174,13 @@ class COCOHandler:
         """get the area from coco annotation
 
         Args:
+
             segmentation: ann['segmentation'],
             width: image width,
             height: image height,
 
         Returns:
+
             area : area of segment points  -> float.
         """
         if type(segmentation) == list:
@@ -198,11 +200,13 @@ class COCOHandler:
         """get the area from coco annotation
 
         Args:
+
             segmentation: ann['segmentation'],
             width: image width,
             height: image height,
 
         Returns:
+        
             area : area of segment points  -> float.
         """
         if type(segmentation) == list:
@@ -276,6 +280,7 @@ class COCOHandler:
         """Add new annotation into your dataset
 
         Args:
+
             read more in http://cocodataset.org/#format-data
             ann_id: int -> annotation id (this should be unique can use get_last_id() + 1),
             image_id: int -> in which image you add new annotation,
@@ -286,6 +291,7 @@ class COCOHandler:
             iscrowd: 0 or 1,
 
         Returns:
+        
             image path : path of the input mask  -> string.
         """
         d = {
@@ -300,7 +306,7 @@ class COCOHandler:
         self.coco.dataset['annotations'].append(d)
         self.coco.createIndex()
 
-    def prepair_image_point(self, image_path, segment):
+    def prepare_image_point(self, image_path, segment):
         img = cv2.imread(image_path)
         pair_points = self.segmentation_to_pair_points(segment)
         return img, pair_points
@@ -316,7 +322,7 @@ class COCOHandler:
             ann['seg_len'] = len(ann['segmentation'][0])
             all_points.extend(ann['segmentation'][0])
 
-        image, points = self.prepair_image_point(
+        image, points = self.prepare_image_point(
             image_path, all_points)
         # self.visualize_points(image,points)
         transformed = self.aug(image=image, keypoints=points)
@@ -398,6 +404,3 @@ class COCOHandler:
             self.coco.dataset['annotations'].remove(ann)
         self.coco.createIndex()
 
-
-if __name__ == "__main__":
-    pass

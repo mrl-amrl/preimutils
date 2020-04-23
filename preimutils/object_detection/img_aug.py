@@ -1,10 +1,10 @@
 # import albumentations as A
 # from scripts.annotations_xml import AnnotationsXML
 import argparse
-from preimutils.annotations_xml import AnnotationsXML
+from .annotations_xml import AnnotationsXML
 import albumentations as A
 # from scripts.label_json import LabelHandler
-from preimutils import LabelHandler
+from .label_json import LabelHandler
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +13,7 @@ import sys
 import os
 import glob
 from tqdm import tnrange, tqdm
-from preimutils.separate_with_label import export_path_count_for_each_label
+from .separate_with_label import export_path_count_for_each_label
 sys.path.insert(0, os.path.dirname(__file__))
 
 

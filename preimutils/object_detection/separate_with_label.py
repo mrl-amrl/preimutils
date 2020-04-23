@@ -2,7 +2,7 @@ import os
 import glob
 import xml.etree.ElementTree as ET
 from tqdm import tqdm
-from preimutils import LabelHandler
+from .label_json import LabelHandler
 import shutil
 
 

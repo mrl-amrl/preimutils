@@ -1,5 +1,4 @@
 import json
-# '/home/amrl/CNN/Hazmats/label.json'
 
 
 class LabelHandler:

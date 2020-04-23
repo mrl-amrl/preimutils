@@ -1,7 +1,7 @@
 import argparse
 import os
-from preimutils import LabelHandler, AMRLImageAug, label_checker, replace_label, cut_with_object_names, xml_address_changer
-from preimutils import separate_with_label, gather_together, shuffle_img_xml,separate_test_val,separate_test_val,xml_csv_save
+from .label_json import LabelHandler, AMRLImageAug, label_checker, replace_label, cut_with_object_names, xml_address_changer
+from preimutils.object_detection import separate_with_label, gather_together, shuffle_img_xml,separate_test_val,separate_test_val,xml_csv_save
 
 
 

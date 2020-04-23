@@ -3,15 +3,14 @@ from glob import glob
 
 import albumentations as A
 import cv2
+import imageio
+import numpy as np
+from PIL import Image
 from tqdm import tqdm
 
-from count import export_path_count_for_each_label
-
-import utils
-from dataset_info import LabelMap
-from PIL import Image
-import numpy as np
-import imageio
+from . import utils 
+# from .utils import export_path_count_for_each_label
+from .dataset import LabelMap
 
 
 class SegmentationAug:
@@ -19,25 +18,27 @@ class SegmentationAug:
     """A wrapper class on albumentations package to work on voc segmentation format easily
 
     Attributes:
+
         mask_dir: masks files paths.
         images_dir: images files paths.
-    """
 
-    file_counter = 0
+    Args:
 
-    def __init__(self, label_map_path, masks_dir, images_dir):
-        """
-        Args:
-            label_map_path (:obj:`str`): you should have a txt file like this
+        label_map_path (:obj:`str`): you should have a txt file like this
             object1:0,0,0::
             object2:128,0,0::
             object3:0,128,0::
             object4:128,128,0::
             object5:0,0,128::
             objectN:128,0,128::
-            masks_dir (str): annotations files paths.
-            images_dir (str) :images files paths.
-        """
+        masks_dir (str): annotations files paths.
+        images_dir (str) :images files paths.
+    """
+
+    _file_counter = 0
+
+    def __init__(self, label_map_path, masks_dir, images_dir):
+  
 
         assert os.path.exists(label_map_path), 'label_map .txt file not exist'
         self.label_handler = LabelMap(label_map_path)
@@ -73,7 +74,7 @@ class SegmentationAug:
             A.IAAEmboss(p=0.2),
         ]
 
-    def get_aug(self, aug):
+    def _get_aug(self, aug):
         return A.Compose(aug)
 
     def augment_image(self, mask_path, quantity, resize=False, width=0, height=0):
@@ -82,18 +83,21 @@ class SegmentationAug:
         save your aug image in your dataset path with the following pattern aug_{counter}.jpg
 
         Args:
+
             mask_path: single mask file path.
             quantity: quantity for your image to augment
             resize:(bool : optional)-> defult False ... resize your augmented images
             width:(int : optional) width for resized ... if resize True you should use this arg
             height:(int : optional) height for resized... if resize True you should use this arg
+
         Returns:
+
             No return
         """
 
         # if resize:
         #     filters_of_aug.append(A.Resize(width, height, always_apply=True))
-        aug = self.get_aug(self.filters_of_aug)
+        aug = self._get_aug(self.filters_of_aug)
         image_path = utils.find_image_from_mask(mask_path, self._images_dir)
         image = cv2.imread(image_path)
         mask = cv2.imread(mask_path)
@@ -101,8 +105,8 @@ class SegmentationAug:
             augmented = aug(image=image, mask=mask)
             nimage = augmented['image']
             nmask = augmented['mask']
-            SegmentationAug.file_counter += 1
-            file_name = 'aug_{}'.format(SegmentationAug.file_counter)
+            SegmentationAug._file_counter += 1
+            file_name = 'aug_{}'.format(SegmentationAug._file_counter)
             nimage_path = os.path.join(self._images_dir, file_name + '.jpg')
             nmask_path = os.path.join(self._masks_dir, file_name + '.png')
             cv2.imwrite(nimage_path, nimage)
@@ -110,18 +114,18 @@ class SegmentationAug:
 
     def auto_augmentation(self, count_of_each):
         """auto augmentation for each picture depend on statistic of the object exist in your dataset
-        if your image and xml names are same
+        if your image and mask names are same
         save your aug image in your dataset path with the following pattern aug_{counter}.jpg
 
         Args:
+
             count_of_each(int): How much of each label you want to have !
-            resize:(bool : optional)-> defult False ... resize your augmented images
-            width:(int : optional) width for resized ... if resize True you should use this arg
-            height:(int : optional) height for resized... if resize True you should use this arg
+
         Returns:
+        
             No return
         """
-        labels_statistics = export_path_count_for_each_label(
+        labels_statistics = utils.export_path_count_for_each_label(
             self.label_handler.color_label(), self._images_dir, self._masks_dir)
         for label in tqdm(self.label_handler.label_color()):
             print(label)
@@ -139,16 +143,11 @@ class SegmentationAug:
         save your encoded mask in your YOUR_MASK_PATH/pre_encoded
 
         Args:
-            class_color(int):   [
-                                (r,g,b),
-                                (r,g,b),
-                                (r,g,b),
-                                ...
-                                ]
-            resize:(bool : optional)-> defult False ... resize your augmented images
-            width:(int : optional) width for resized ... if resize True you should use this arg
-            height:(int : optional) height for resized... if resize True you should use this arg
+
+            class_color(int):   [(r,g,b),(r,g,b),(r,g,b),...]
+
         Returns:
+        
             No return
         """
         dst_path = os.path.join(self._masks_dir, 'pre_encoded')
