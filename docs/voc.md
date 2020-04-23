@@ -16,6 +16,33 @@
 
 
 ```
-## convert your custom dataset to VOC format
 
-If you want to convert your custom dataset to VOC format use
+# preimutils.segmentation.voc.utils
+
+## Modules 
+
+::: preimutils.segmentations.voc.utils
+    :docstring:
+    :members:
+
+# preimutils.segmentation.voc.Dataset
+
+## Class
+
+::: preimutils.segmentations.voc.Dataset
+    :docstring:
+    :members:
+# preimutils.segmentation.voc.LabelMap
+
+## Class
+
+::: preimutils.segmentations.voc.LabelMap
+    :docstring:
+    :members:
+
+# preimutils.segmentation.voc.SegmentationAug
+
+## Class
+::: preimutils.segmentations.voc.SegmentationAug
+    :docstring:
+    :members:

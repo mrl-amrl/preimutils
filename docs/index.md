@@ -1,4 +1,6 @@
 # Official English Documentation for PreImutils!
+![PreImutils](imgs/preimutils.png)
+
 PreImutils is a python library built to empower developers, reseachers and students to prepare and preprocessing image datasets for applications and systems with Deep Learning and Computer Vision capabilities using simple and few lines of code. This documentation is provided to provide detailed insight into all the classes and functions available in PreImutils, coupled with a number of code examples.
 
 The Official GitHub Repository of PreImutils is https://github.com/mrl-amrl/preimutils

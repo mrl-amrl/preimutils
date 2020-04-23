@@ -5,3 +5,4 @@ pandas
 imutils
 cv2
 imageio
+pycocotools
