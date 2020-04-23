@@ -10,7 +10,8 @@ PreImutils is a python library built to empower developers, reseachers and stude
 The Official GitHub Repository of PreImutils is https://github.com/mrl-amrl/preimutils
 
 For read the full doc please visit   
-https://preimutils.readthedocs.io/
+https://a-sharifi.github.io/preimtuils-doc/
+
 ## Easy to use:
 
 ## Why we need PreImutils?
