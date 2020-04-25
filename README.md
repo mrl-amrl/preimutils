@@ -78,7 +78,7 @@ preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DI
 
 ## How should I use Preimutils?
 
-We prepare a full documentation in https://preimutils.readthedocs.io/ .
+We prepare a full documentation in https://a-sharifi.github.io/preimtuils-doc/ .
 
 
 
