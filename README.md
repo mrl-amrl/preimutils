@@ -95,7 +95,7 @@ dataset.seprate_dataset(shuffle=True,valid_persent=0.10,test_persent=0.10,save=T
 
 ## How should I use Preimutils?
 
-We prepare a full documentation in https://preimutils.readthedocs.io/ .
+We prepare a full documentation in https://a-sharifi.github.io/preimtuils-doc/ .
 
 
 
