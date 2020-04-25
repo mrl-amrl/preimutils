@@ -16,6 +16,14 @@
 
 
 ```
+**If you have custom dataset just use below method**
+
+```python
+from preimutils.segmentations.voc import utils
+
+
+utils.custom_to_voc('YOUR_MASKS_DIR','YOUR_IMAGES_DIR','TARGET_TO_SAVE_VOC_DS')
+```
 
 # preimutils.segmentation.voc.utils
 

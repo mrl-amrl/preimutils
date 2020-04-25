@@ -145,11 +145,15 @@ class Dataset:
     def check_valid_dataset(self):
         """Check for all masks images if there isn't related 
             mask image print the work image path
-            - If image not exist raise ValueError
+            If image not exist raise ValueError
 
             Args:
 
                 None
+
+            ValueError : 
+
+                if image that you want not exists
 
             Returns:
 

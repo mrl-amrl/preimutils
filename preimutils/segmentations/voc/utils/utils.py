@@ -74,7 +74,7 @@ def export_path_count_for_each_label(color_label,images_dir, masks_dir):
         }
     """
     label_statistic = {value : {'count' : 0 , 'masks_path' : [],'images_path' : []}  for value in color_label.values()}
-    for mask_path in tqdm(glob.glob(os.path.join(masks_dir, '*.png'))):
+    for mask_path in tqdm(glob(os.path.join(masks_dir, '*.png'))):
         image_path = find_image_from_mask(mask_path,images_dir)
         image = cv2.imread(mask_path)
         orig = image.copy()

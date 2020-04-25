@@ -18,15 +18,15 @@ https://a-sharifi.github.io/preimtuils-doc/
 Everything that you need to preprocess your image dataset is here.
 One of the most important item for machine learning or CNN or other neural networks is preparing your dataset.
 
+    - It's easy to use.
+    - You can use both in terminal and code.
+    - It has separate classes for object-detection and segmentation datasets.
 
-    - It's easy to use:
-
-    - You can use both in terminal and code
-  
+## For Object detection
 ### Use in Code
 
 ```python
-from preimutils import AMRLImageAug
+from preimutils.object_detection import AMRLImageAug
 
 img_aug = AMRLImageAug(json_path, xmls_dir, images_dir)
 img_aug.auto_augmentation(quantity, resized = True, width = 300, height = 300)
@@ -42,7 +42,24 @@ QUANTITY=1000 # the amount of each object to create
 
 preimutils --function $FUNCTION --label_json_path $JSON_PATH --xmls_dir $XMLS_DIR --images_dir $IMAGES_DIR --quantity $QUANTITY
 ```
+## For segmentation task
 
+```python
+from preimutils.segmentations.voc import Dataset
+from preimutils.segmentations.voc import SegmentationAug
+
+
+dataset = Dataset('./VOC2012')
+
+# First checking to have valid dataset(All dirs exist all mask's image exist or no)
+dataset.check_valid_dataset()
+seg = SegmentationAug(dataset.label_map_path,dataset.masks_dir,dataset.images_dir)
+
+# At the end, there must be 2000 of each object
+seg.auto_augmentation(2000)
+# Seprate dataset into validation 10% test 10% and train 80% and save it to train.txt,trainval.txt ,val.txt,test.txt
+dataset.seprate_dataset(shuffle=True,valid_persent=0.10,test_persent=0.10,save=True)
+```
 ## SomePoint
 
 
