@@ -10,7 +10,7 @@ PreImutils is a python library built to empower developers, reseachers and stude
 The Official GitHub Repository of PreImutils is https://github.com/mrl-amrl/preimutils
 
 For read the full doc please visit   
-https://a-sharifi.github.io/preimtuils-doc/
+https://a-sharifi.github.io/preimutils-doc/
 
 ## Easy to use:
 
@@ -95,7 +95,7 @@ dataset.seprate_dataset(shuffle=True,valid_persent=0.10,test_persent=0.10,save=T
 
 ## How should I use Preimutils?
 
-We prepare a full documentation in https://a-sharifi.github.io/preimtuils-doc/ .
+We prepare a full documentation in https://a-sharifi.github.io/preimutils-doc/ .
 
 
 
