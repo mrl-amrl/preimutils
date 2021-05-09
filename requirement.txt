@@ -3,6 +3,7 @@ tqdm
 albumentations
 pandas
 imutils
-cv2
+opencv-python
 imageio
 pycocotools
+shutils
