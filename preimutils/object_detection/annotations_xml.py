@@ -18,11 +18,11 @@ class AnnotationsXML:
         root = tree.getroot()
         imagepath_with_bounding_box['image_path'] = export_image_path(xml_file_path,self.images_dir)
         for objects in root.findall('object'):
-            class_names.append(objects[0].text)
-            bboxs.append([int(objects[4][0].text),
-                          int(objects[4][1].text),
-                          int(objects[4][2].text),
-                          int(objects[4][3].text)])
+            class_names.append(objects.findall('name')[0].text)
+            bboxs.append([int(objects.findall('bndbox')[0][0].text),
+                          int(objects.findall('bndbox')[0][1].text),
+                          int(objects.findall('bndbox')[0][2].text),
+                          int(objects.findall('bndbox')[0][3].text)])
 
             category_id.append(categori_label_id[objects[0].text])
 

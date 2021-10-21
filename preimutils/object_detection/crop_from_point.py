@@ -20,8 +20,8 @@ def export_image_path(xml_path: str, images_dir: str) -> str:
 
     if not os.path.exists(xml_path):
         print('file_not_exist')
-    file_base = os.path.basename(xml_path).split('.')[0]
-    image_path = glob.glob(images_dir+'/{}.jpg'.format(file_base))[0]
+    file_base = os.path.basename(xml_path)[:-4]
+    image_path = glob.glob(os.path.join(images_dir,'{}.jpg'.format(file_base)))[0]
     return image_path
 
 
