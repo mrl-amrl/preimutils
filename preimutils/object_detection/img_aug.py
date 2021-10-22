@@ -174,8 +174,10 @@ class AMRLImageAug:
             coefficient = count_of_each // count
             print(coefficient)
             for xml in xmls_paths:
-                self.augment_image(xml, coefficient, resize, width, height)
-
+                try:
+                    self.augment_image(xml, coefficient, resize, width, height)
+                except ValueError as e:
+                    print('File {} except because {}'.format(xml, e))
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
