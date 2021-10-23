@@ -19,7 +19,7 @@ class AnnotationsXML:
         imagepath_with_bounding_box['image_path'] = export_image_path(xml_file_path,self.images_dir)
         for objects in root.findall('object'):
             class_names.append(objects.findall('name')[0].text)
-            bbox = objects.findall('bndbox')
+            bbox = objects.findall('bndbox')[0]
             bboxs.append([int(bbox.findall('xmin')[0].text),
                           int(bbox.findall('ymin')[0].text),
                           int(bbox.findall('xmax')[0].text),
