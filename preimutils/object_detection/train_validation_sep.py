@@ -17,14 +17,13 @@ def separate_test_val(images_dir, xmls_dir, dst_validatoion_dir, dst_train_dir, 
         No return
     """
     if not os.path.exists(dst_validatoion_dir):
-        os.mkdir(dst_validatoion_dir)
+        os.makedirs(dst_validatoion_dir)
     if not os.path.exists(dst_train_dir):
-        os.mkdir(dst_train_dir)
+        os.makedirs(dst_train_dir)
     assert os.path.exists(images_dir),'images path not exist'
     assert os.path.exists(xmls_dir),'xmls path not exist'
-    a = glob.glob(os.path.join(xmls_dir , '/*.xml'))
+    a = glob.glob(os.path.join(xmls_dir , '*.xml'))
     all_xmls = random.sample(a, len(a))
-    
     validation_max_index = int(validation_percentage * len(all_xmls))
     validation_xmls_path = all_xmls[:validation_max_index]
     train_xmls_path = all_xmls[validation_max_index:]

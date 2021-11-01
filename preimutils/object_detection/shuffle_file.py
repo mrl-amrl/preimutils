@@ -29,8 +29,8 @@ def shuffle_img_xml(xmls_dir, images_dir, dst_dir):
     # check images path
     if not os.path.exists(dst_images_path):
         os.makedirs(dst_images_path)
-    for source_xml_path in tqdm(glob.glob(os.path.join(xmls_dir , '*'))):
-        file_base_name = os.path.basename(source_xml_path).split('.')[0]
+    for source_xml_path in tqdm(glob.glob(os.path.join(xmls_dir , '*.xml'))):
+        file_base_name = os.path.basename(source_xml_path)[:-4]
         source_image_path = glob.glob(os.path.join(
             images_dir , '{}.jpg'.format(file_base_name)))
         source_image_path = source_image_path[0]
