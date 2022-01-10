@@ -1,7 +1,7 @@
 # from dataset_info import Dataset
 import glob
 import os
-import shutils
+import shutil
 from glob import glob
 
 import cv2
@@ -13,7 +13,8 @@ from tqdm import tqdm
 import mkautodoc
 from ..dataset import LabelMap
 
-def custom_to_voc(masks_dir,images_dir,target_dir):
+
+def custom_to_voc(masks_dir, images_dir, target_dir):
     """Convert your custom dataset to normal voc format
 
     Args:
@@ -25,36 +26,37 @@ def custom_to_voc(masks_dir,images_dir,target_dir):
 
         (list) : unique colors from your masks
     """
-    os.makedirs(target_dir,exist_ok=True)
-    seg_cls = os.path.join(target_dir,'SegmentationClass')
-    jpegimages = os.path.join(target_dir,'JPEGImages')
-    seg_object = os.path.join(target_dir,'SegmentationObject')
-    seg_txt = os.path.join(target_dir,'ImageSets','Segmentation')
+    os.makedirs(target_dir, exist_ok=True)
+    seg_cls = os.path.join(target_dir, 'SegmentationClass')
+    jpegimages = os.path.join(target_dir, 'JPEGImages')
+    seg_object = os.path.join(target_dir, 'SegmentationObject')
+    seg_txt = os.path.join(target_dir, 'ImageSets', 'Segmentation')
 
-    os.makedirs(seg_cls,exist_ok=True)
-    os.makedirs(jpegimages,exist_ok=True)
-    os.makedirs(seg_object,exist_ok=True)
-    os.makedirs(seg_txt,exist_ok=True)
+    os.makedirs(seg_cls, exist_ok=True)
+    os.makedirs(jpegimages, exist_ok=True)
+    os.makedirs(seg_object, exist_ok=True)
+    os.makedirs(seg_txt, exist_ok=True)
 
     unique_colors = unique_label_from_masks(masks_dir)
     label_map = ['label:color_rgb:parts:actions']
     label_map.append('background:0,0,0::')
     for i, color in enumerate(unique_colors):
-        label_map.append('object{}:{},{},{}::'.format(i+1,color[0],color[1],color[2]))
-    with open(os.path.join(target_dir,'labelmap.txt'),'w') as f:
+        label_map.append('object{}:{},{},{}::'.format(
+            i+1, color[0], color[1], color[2]))
+    with open(os.path.join(target_dir, 'labelmap.txt'), 'w') as f:
         f.write('\n'.join(label_map))
-    for mask in glob(os.path.join(masks_dir,'*.png')):
-        shutil.copy2(mask,seg_cls)
-    for image in glob(os.path.join(images_dir,'*.*')):
-        shutil.copy2(image,jpegimages)
+    for mask in glob(os.path.join(masks_dir, '*.png')):
+        shutil.copy2(mask, seg_cls)
+    for image in glob(os.path.join(images_dir, '*.*')):
+        shutil.copy2(image, jpegimages)
 
 
-def export_path_count_for_each_label(color_label,images_dir, masks_dir):
+def export_path_count_for_each_label(color_label, images_dir, masks_dir, extention='jpg'):
     """Get statistics of dataset with their labels with their mask and images files path
 
     Args:
 
-        xmls_dir: all xmls file directory.
+        masks_dir: your mask images directory.
         images_dir: your images directory.
         color_label:[(r,g,b):object1,(r,g,b):'object2',...,(r,g,b):'objectN']
 
@@ -73,9 +75,11 @@ def export_path_count_for_each_label(color_label,images_dir, masks_dir):
                     }
         }
     """
-    label_statistic = {value : {'count' : 0 , 'masks_path' : [],'images_path' : []}  for value in color_label.values()}
+    label_statistic = {value: {'count': 0, 'masks_path': [],
+                               'images_path': []} for value in color_label.values()}
     for mask_path in tqdm(glob(os.path.join(masks_dir, '*.png'))):
-        image_path = find_image_from_mask(mask_path,images_dir)
+        image_path = find_image_from_mask(
+            mask_path, images_dir, extention=extention)
         image = cv2.imread(mask_path)
         orig = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -97,11 +101,12 @@ def export_path_count_for_each_label(color_label,images_dir, masks_dir):
                     mask_path, mean_rgb))
             label_statistic[color_name]['count'] += 1
             label_statistic[color_name]['masks_path'].append(mask_path)
-            label_statistic[color_name]['images_path'].append(image_path)
+            label_statistic[color_name]['images_path'].append(image_path[0])
 
     return label_statistic
 
-def encode_segmap(mask,class_color):
+
+def encode_segmap(mask, class_color):
     """Encode segmentation label images as pascal classes
 
     Args:
@@ -124,7 +129,7 @@ def encode_segmap(mask,class_color):
     return label_mask
 
 
-def decode_segmap(label_mask,class_color, plot=False):
+def decode_segmap(label_mask, class_color, plot=False):
     """Decode segmentation class labels into a color image
 
     Args:
@@ -142,20 +147,28 @@ def decode_segmap(label_mask,class_color, plot=False):
     g = label_mask.copy()
     b = label_mask.copy()
     for ll in range(0, len(class_color)):
-        r[label_mask == ll] = class_color[ll, 0]
-        g[label_mask == ll] = class_color[ll, 1]
-        b[label_mask == ll] = class_color[ll, 2]
+        r[label_mask == ll] = class_color[ll][0]
+        g[label_mask == ll] = class_color[ll][1]
+        b[label_mask == ll] = class_color[ll][2]
     rgb = np.zeros((label_mask.shape[0], label_mask.shape[1], 3))
-    rgb[:, :, 0] = r / 255.0
-    rgb[:, :, 1] = g / 255.0
-    rgb[:, :, 2] = b / 255.0
+    # rgb[:, :, 0] = r / 255.0
+    # rgb[:, :, 1] = g / 255.0
+    # rgb[:, :, 2] = b / 255.0
+
+    rgb[:, :, 0] = r
+    rgb[:, :, 1] = g
+    rgb[:, :, 2] = b
+    rgb = rgb.astype(np.uint8)
+
     if plot:
         plt.imshow(rgb)
         plt.show()
+
     else:
         return rgb
 
-def find_image_from_mask(mask, images_dir):
+
+def find_image_from_mask(mask, images_dir, extention='jpg'):
     """Export image path from the mask file 
     if your image and mask names are same
 
@@ -169,9 +182,10 @@ def find_image_from_mask(mask, images_dir):
         image path : path of the input mask  -> string.
     """
     mask = os.path.basename(mask)
-    image_path = glob(os.path.join(images_dir, mask[:-4]+'*'))[0]
+    image_path = glob(os.path.join(images_dir, mask[:-4] + '.' + extention))
     if not len(image_path):
-        raise ValueError("Image {} not found".format(images_dir, mask[:-4]+'*'))
+        raise ValueError("Image {} not found".format(
+            images_dir + '/' + mask[:-4] + '.' + extention))
     return image_path
 
 
@@ -193,9 +207,9 @@ def find_maxmin_size_images(images_dir):
     for image in tqdm(glob(os.path.join(images_dir, '*.*'))):
         img = cv2.imread(image)
         try:
-            height, width , _ = img.shape
+            height, width, _ = img.shape
         except AttributeError:
-            print('{} is not a image file ',image)
+            print('{} is not a image file ', image)
         min_height = min(min_height, height)
         min_width = min(min_width, width)
         max_height = max(height, max_height)
@@ -207,6 +221,7 @@ def find_maxmin_size_images(images_dir):
         'max_height': max_height,
         'max_width': max_width
     }
+
 
 def unique_label_from_masks(masks_dir):
     """get the unique colors(classes) from your masks
@@ -240,6 +255,5 @@ def unique_label_from_masks(masks_dir):
 
     unique_colors = list(unique_colors)
     # Add black (background) to unique colors
-    unique_colors.insert(0,(0,0,0))
+    unique_colors.insert(0, (0, 0, 0))
     return unique_colors
-

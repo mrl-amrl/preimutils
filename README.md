@@ -49,18 +49,18 @@ from preimutils.segmentations.voc import Dataset
 from preimutils.segmentations.voc import SegmentationAug
 
 
-dataset = Dataset('./VOC2012')
+dataset = Dataset('./VOC2012', images_extention='jpg')
 
 # First checking to have valid dataset(All dirs exist all mask's image exist or no)
 dataset.check_valid_dataset()
-seg = SegmentationAug(dataset.label_map_path,dataset.masks_dir,dataset.images_dir)
+seg = SegmentationAug(dataset.label_map_path,dataset.masks_dir,dataset.images_dir, images_extention='jpg')
 
 # At the end, there must be 2000 of each object
 seg.auto_augmentation(2000)
 # Seprate dataset into validation 10% test 10% and train 80% and save it to train.txt,trainval.txt ,val.txt,test.txt
 dataset.seprate_dataset(shuffle=True,valid_persent=0.10,test_persent=0.10,save=True)
 ```
-## SomePoint
+## Some points
 
 
     1.  The amount of your dataset is really important. Not very few that lose the accuracy not great number of that lose your time and cause to overfitting, more than 4000 image per object is enough that mostly. depend on how much your feature is hard.

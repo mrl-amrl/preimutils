@@ -26,8 +26,8 @@ class LabelMap:
         masks_dir (str): annotations files paths.
         images_dir (str) :images files paths.
     """
-    def __init__(self, label_map_path):
 
+    def __init__(self, label_map_path):
 
         with open(label_map_path) as f:
             lines = f.readlines()
@@ -56,7 +56,7 @@ class LabelMap:
 
     def color_label(self):
         """Export color_label dict 
-        
+
         Args:
 
             None
@@ -115,7 +115,7 @@ class Dataset:
 
     """
 
-    def __init__(self, dataset_dir):
+    def __init__(self, dataset_dir, images_extention='jpg'):
         self.__dataset_dir_model = """
 ├── ImageSets
 │   └── Segmentation
@@ -141,6 +141,7 @@ class Dataset:
         self.segmentations_object_dir = os.path.join(
             dataset_dir, 'SegmentationObject')
         self.label_map_path = os.path.join(dataset_dir, 'labelmap.txt')
+        self.images_extention = images_extention
 
     def check_valid_dataset(self):
         """Check for all masks images if there isn't related 
@@ -160,7 +161,8 @@ class Dataset:
                 None
         """
         for mask in glob(os.path.join(self.masks_dir, '*.png')):
-            utils.find_image_from_mask(mask, self.images_dir)
+            utils.find_image_from_mask(
+                mask, self.images_dir, extention=self.images_extention)
 
     def seprate_dataset(self, shuffle=False, valid_persent=0.25, test_persent=None, save=True):
         """Seprate dataset to train.txt,trainval.txt,val.txt 
@@ -186,7 +188,6 @@ class Dataset:
             random.shuffle(total_masks_path)
 
         if test_persent:
-            print('in')
             valid_len = round(len(total_masks_path) * valid_persent)
             test_len = round(len(total_masks_path) * test_persent)
             train_len = len(total_masks_path) - test_len - valid_len
