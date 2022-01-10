@@ -1,7 +1,7 @@
 # from dataset_info import Dataset
 import glob
 import os
-import shutils
+import shutil
 from glob import glob
 
 import cv2
