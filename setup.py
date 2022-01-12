@@ -31,8 +31,7 @@ setup(
         'imutils',
         'opencv-python',
         'imageio',
-        'pycocotools',
-        'shutils'
+        'pycocotools'
     ],
     zip_safe=False,
 )

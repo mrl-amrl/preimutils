@@ -45,7 +45,7 @@ class SegmentationAug:
         self.label_handler = LabelMap(label_map_path)
 
         assert os.path.exists(
-            masks_dir), 'Masks path does not exist please check the path'
+                masks_dir), 'Masks path does not exist please check the path'
         self._masks_dir = masks_dir
 
         assert os.path.exists(
