@@ -50,12 +50,22 @@ def augmented_images_write(img: list, key_points: list, images_name: list, save_
     df.to_csv(os.path.join(save_dir, 'augmented.csv'))
 
 
-def visualize_keypoints(images, keypoints, save: bool = False, name: str = None):
-    image = images
+def visualize_keypoints(images, keypoints, save: bool = False, name: str = None) -> None:
+    """
+
+    Args:
+        images: Numpy array image
+        keypoints: list of image keypoints
+        save: (bool) if True image saved in directory
+        name: (str) image file name to save (use when save=True)
+
+    Returns:
+
+    """
+    image = images.copy()
     current_keypoint = keypoints
     plt.imshow(image)
     current_keypoint = np.array(current_keypoint)
-    print(len(current_keypoint))
     current_keypoint = current_keypoint[:, :2]
     for idx, (x, y) in enumerate(current_keypoint):
         plt.scatter([x], [y], marker=".", s=50, linewidths=5)
@@ -106,3 +116,33 @@ def xml_csv_save(xml_dir: str, save_dir: str) -> None:
         print(f'Saved: {save_dir}')
     except Exception as e:
         print(e)
+
+
+def read_images_and_annotations(image_dir: str, annotation_csv_dir: str):
+    """
+
+    Args:
+        image_dir: Image directory
+        annotation_csv_dir: annotation csv file saved in augmention
+
+    Returns:
+            Images , List of each image key points
+    """
+    df = pd.read_csv(annotation_csv_dir)
+
+    images = []
+    keypoints = []
+    for k in df.iterrows():
+        img = cv2.imread(os.path.join(image_dir, k[1][0]), cv2.IMREAD_COLOR)
+        images.append(img)
+
+        dfsprow = df.loc[df['Unnamed: 0'] == k[1][0]]
+        list_row_string = list(dfsprow.iloc[0])[1:]
+        list_row_tuple = []
+        for item in list_row_string:
+            if not ('nan' in str(item)):
+                list_row_tuple.append(eval(item))
+
+        keypoints.append(list_row_tuple)
+
+    return images, keypoints

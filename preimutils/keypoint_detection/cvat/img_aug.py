@@ -18,12 +18,16 @@ class KPImageAug():
         # assert os.path.exists(images_dir), 'Images path not exist'
 
     def augment_image(self, img: np.array, kpoints: list, quantity: int = 1, width: int = 0, height: int = 0,
-                      save: bool = False, save_dir: str = None):
+                      save: bool = False, save_dir: str = None, return_filenames: bool = False):
+
+        if (width == 0) or (height == 0):
+            width = img.shape(0)
+            height = img.shape(1)
 
         transform = A.Compose(
             [A.Resize(width, height, always_apply=True),
              A.VerticalFlip(p=1),
-             A.RandomRotate90(p=0.5),
+             A.RandomRotate90(p=0.2),
              A.MotionBlur(p=0.1),
              A.MedianBlur(p=0.2),
              A.ISONoise(p=0.2),
@@ -47,7 +51,7 @@ class KPImageAug():
         augkpoints = []
         augfilename = []
 
-        for _ in tqdm(range(quantity), desc='Singel image'):
+        for _ in tqdm(range(quantity)):
             augmented = transform(image=img, keypoints=kpoints)
             KPImageAug.file_counter += 1
             file_name = 'aug_image{}.jpg'.format(KPImageAug.file_counter)
@@ -59,4 +63,27 @@ class KPImageAug():
             assert os.path.exists(save_dir), 'save directory not exist'
             augmented_images_write(augimages, augkpoints, augfilename, save_dir)
 
+        if return_filenames:
+            return augimages, augkpoints, augfilename
+
         return augimages, augkpoints
+
+    def multi_augment(self, images: list, kpoints: list, quantity_of_ech_image: int = 1, width: int = 0,
+                      height: int = 0, save: bool = False, save_dir: str = None):
+        m_aug_images = []
+        m_aug_kpoints = []
+        m_aug_filenames = []
+        for t in range(len(images)):
+            img = images[t]
+            kps = kpoints[t]
+            augimages, augkpoints, augfilenames = self.augment_image(img, kps, quantity_of_ech_image, width, height,
+                                                                     False, '', True)
+            m_aug_images = m_aug_images + augimages
+            m_aug_kpoints = m_aug_kpoints + augkpoints
+            m_aug_filenames = m_aug_filenames + augfilenames
+
+        if save:
+            assert os.path.exists(save_dir), 'save directory not exist'
+            augmented_images_write(m_aug_images, m_aug_kpoints, m_aug_filenames, save_dir)
+
+        return m_aug_images, m_aug_kpoints
