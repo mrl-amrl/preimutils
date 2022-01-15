@@ -36,7 +36,6 @@ setup(
         'xmltodict',
         'numpy',
         'matplotlib',
-        'torch',
     ],
     zip_safe=False,
 )
