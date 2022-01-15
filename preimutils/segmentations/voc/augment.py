@@ -51,29 +51,68 @@ class SegmentationAug:
         assert os.path.exists(
             images_dir), 'Images path does not exist please check the image path'
         self._images_dir = images_dir
+        # self.filters_of_aug = [
+
+        #     A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
+        #                        shift_limit=0.1, p=1, border_mode=0),
+        #     A.RandomRotate90(p=0.2),
+        #     A.RandomBrightnessContrast(p=0.2),
+        #     A.RandomShadow(p=0.1),
+        #     A.RandomSnow(snow_point_lower=0.1,
+        #                  snow_point_upper=0.15, p=0.1),
+        #     A.RGBShift(p=0.2),
+        #     A.CLAHE(p=0.2),
+
+        #     A.HueSaturationValue(
+        #         p=0.1, hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10),
+
+        #     A.MotionBlur(p=0.1),
+        #     A.MedianBlur(p=0.2),
+        #     A.ISONoise(p=0.2),
+        #     A.Posterize(p=0.2),
+        #     A.augmentations.geometric.transforms.Perspective(p=0.1),
+        #     A.augmentations.geometric.transforms.PiecewiseAffine(
+        #         p=0.1, scale=(0.01, 0.02)),
+        #     A.augmentations.transforms.Emboss(p=0.2),
+        # ]
+
         self.filters_of_aug = [
 
-            A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
-                               shift_limit=0.1, p=1, border_mode=0),
-            A.RandomRotate90(p=0.2),
-            A.RandomBrightnessContrast(p=0.2),
-            A.RandomShadow(p=0.1),
-            A.RandomSnow(snow_point_lower=0.1,
-                         snow_point_upper=0.15, p=0.1),
-            A.RGBShift(p=0.2),
-            A.CLAHE(p=0.2),
+            A.HorizontalFlip(p=0.5),
 
-            A.HueSaturationValue(
-                p=0.1, hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10),
+            A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=0),
 
-            A.MotionBlur(p=0.1),
-            A.MedianBlur(p=0.2),
-            A.ISONoise(p=0.2),
-            A.Posterize(p=0.2),
-            A.augmentations.geometric.transforms.Perspective(p=0.1),
-            A.augmentations.geometric.transforms.PiecewiseAffine(
-                p=0.1, scale=(0.01, 0.02)),
-            A.augmentations.transforms.Emboss(p=0.2),
+            A.PadIfNeeded(min_height=512, min_width=512, always_apply=True, border_mode=0),
+            A.RandomCrop(height=512, width=512, p=0.1),
+
+            A.augmentations.transforms.GaussNoise(p=0.2),
+            A.augmentations.geometric.transforms.Perspective(p=0.5),
+
+            A.OneOf(
+                [
+                    A.CLAHE(p=1),
+                    A.RandomBrightness(p=1),
+                    A.RandomGamma(p=1),
+                ],
+                p=0.9,
+            ),
+
+            A.OneOf(
+                [
+                    A.augmentations.transforms.Sharpen(p=1),
+                    A.Blur(blur_limit=3, p=1),
+                    A.MotionBlur(blur_limit=3, p=1),
+                ],
+                p=0.9,
+            ),
+
+            A.OneOf(
+                [
+                    A.RandomContrast(p=1),
+                    A.HueSaturationValue(p=1),
+                ],
+                p=0.9,
+            ),
         ]
 
     def _get_aug(self, aug):
