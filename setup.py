@@ -32,7 +32,11 @@ setup(
         'opencv-python',
         'imageio',
         'pycocotools',
-        'shutils'
+        'shutils',
+        'xmltodict',
+        'numpy',
+        'matplotlib',
+        'torch',
     ],
     zip_safe=False,
 )

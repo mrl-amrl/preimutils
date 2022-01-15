@@ -7,17 +7,22 @@ import numpy as np
 import pandas as pd
 import tqdm
 import xmltodict
+from tqdm import tqdm
 
 
 def load_images_from_folder(dir: str, image_list: list) -> np.array:
     """
+    Read Images on input directory depend on Images name list
+    Args:
+        dir: Images Directory
+        image_list: List name of images
 
-    :param dir: Images Directory
-    :param image_list: List name of images
-    :return: Numpy array of Images
+    Returns:
+        Numpy array of Images
     """
+
     images = []
-    for image in tqdm.tqdm(image_list):
+    for image in tqdm(image_list):
         # Read image
         img = cv2.imread(os.path.join(dir, image), cv2.IMREAD_COLOR)
         images.append(img)
@@ -27,9 +32,14 @@ def load_images_from_folder(dir: str, image_list: list) -> np.array:
 
 def xml_to_dict(xml_dir: str) -> dict:
     """
-    :param xml_dir: Directory of XML file in string format
-    :return: Dictionary of XML file
+
+    Args:
+        xml_dir: Directory of XML file in string format
+
+    Returns:
+        Dictionary of XML file
     """
+
     file_xml = open(xml_dir, 'r')
     data_dict = xmltodict.parse(file_xml.read())
     file_xml.close()
@@ -38,6 +48,15 @@ def xml_to_dict(xml_dir: str) -> dict:
 
 
 def augmented_images_write(img: list, key_points: list, images_name: list, save_dir: str) -> None:
+    """
+    Save Augmented Images
+    Args:
+        img: (list) Images
+        key_points: (list) Images key_points
+        images_name: (list) Images Names to save
+        save_dir: (str) Directory to save Images
+
+    """
     for i in range(len(img)):
         cv2.imwrite(os.path.join(save_dir, images_name[i]), img[i])
 
@@ -50,25 +69,32 @@ def augmented_images_write(img: list, key_points: list, images_name: list, save_
     df.to_csv(os.path.join(save_dir, 'augmented.csv'))
 
 
-def visualize_keypoints(images, keypoints, save: bool = False, name: str = None) -> None:
+def visualize_keypoints(images: np.array, keypoints: list, save: bool = False, name: str = None,
+                        size: int = 50) -> None:
     """
-
+    Function for visualizing key_points on image
     Args:
         images: Numpy array image
         keypoints: list of image keypoints
         save: (bool) if True image saved in directory
         name: (str) image file name to save (use when save=True)
-
-    Returns:
+        size: (int) size of keypoints on image (default = 50)
 
     """
     image = images.copy()
     current_keypoint = keypoints
     plt.imshow(image)
+
+    for kp in current_keypoint:
+        try:
+            kp.pop(2)
+        except:
+            continue
+    # print(current_keypoint)
     current_keypoint = np.array(current_keypoint)
     current_keypoint = current_keypoint[:, :2]
     for idx, (x, y) in enumerate(current_keypoint):
-        plt.scatter([x], [y], marker=".", s=50, linewidths=5)
+        plt.scatter([x], [y], marker=".", s=size, linewidths=5)
     if save:
         plt.savefig(f'{name}.png')
     plt.figure(figsize=(30, 30))
@@ -77,9 +103,14 @@ def visualize_keypoints(images, keypoints, save: bool = False, name: str = None)
 
 def xml_to_csv(xml_dir: str) -> pd.DataFrame:
     """
-    :param xml_dir: Directory of xml file
-    :return: Pandas DataFrame created from xml file
+    Convert XML file to Pandas DataFrame (CSV format)
+    Args:
+        xml_dir: Directory of xml file
+
+    Returns:
+        Pandas DataFrame created from xml file
     """
+
     ann_dict = xml_to_dict(xml_dir)
     images_name = [ann_dict['annotations']['image'][i]['@name'] for i in range(len(ann_dict['annotations']['image']))]
 
@@ -107,8 +138,11 @@ def xml_to_csv(xml_dir: str) -> pd.DataFrame:
 
 def xml_csv_save(xml_dir: str, save_dir: str) -> None:
     """
-    :param xml_dir: Directory of xml file
-    :param save_dir: Directory to save csv file
+    Convert XML file to CSV format and Save it
+    Args:
+        xml_dir: Directory of xml file
+        save_dir: Directory to save csv file
+
     """
     df = xml_to_csv(xml_dir)
     try:
@@ -120,7 +154,7 @@ def xml_csv_save(xml_dir: str, save_dir: str) -> None:
 
 def read_images_and_annotations(image_dir: str, annotation_csv_dir: str):
     """
-
+    Function to read Images and Annotations from Input Directory
     Args:
         image_dir: Image directory
         annotation_csv_dir: annotation csv file saved in augmention
@@ -132,7 +166,7 @@ def read_images_and_annotations(image_dir: str, annotation_csv_dir: str):
 
     images = []
     keypoints = []
-    for k in df.iterrows():
+    for k in tqdm(df.iterrows()):
         img = cv2.imread(os.path.join(image_dir, k[1][0]), cv2.IMREAD_COLOR)
         images.append(img)
 
