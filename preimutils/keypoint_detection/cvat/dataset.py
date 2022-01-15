@@ -6,7 +6,7 @@ from .utils import read_images_and_annotations
 from .utils import xml_to_dict, load_images_from_folder
 
 
-class DataSet:
+class Dataset:
     def __init__(self, Images_dir: str, XML_dir: str = None, CSV_dir: str = None, data_size: int = None):
         """
         Args:
