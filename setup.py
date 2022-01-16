@@ -9,7 +9,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name="preimutils",
     packages=find_packages(),
-    version='1.0.6',
+    version='1.1.0',
     description="All you need to prepare and preprocess your annotated images",
     long_description=long_description,
     long_description_content_type='text/markdown',
