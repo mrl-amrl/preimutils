@@ -93,7 +93,7 @@ class KPImageAug():
 
         return augimages, augkpoints
 
-    def multi_augment(self, images: list, kpoints: list, quantity_of_ech_image: int = 1, width: int = 0,
+    def auto_augmentation(self, images: list, kpoints: list, quantity_of_ech_image: int = 1, width: int = 0,
                       height: int = 0, save: bool = False, save_dir: str = None):
         """
         multi augmentation for each picture depend on quantity that you get for it

@@ -26,6 +26,7 @@ class Dataset:
             images, self.annotations, _ = self.load_raw_data()
         else:
             images, self.annotations = read_images_and_annotations(self.images_dir, self.csv_dir)
+            images, self.annotations = images[:data_size], self.annotations[:data_size]
 
         self.images = images
 
