@@ -10,7 +10,6 @@ import numpy as np
 from imutils import contours
 from matplotlib import pyplot as plt
 from tqdm import tqdm
-import mkautodoc
 from ..dataset import LabelMap
 
 
