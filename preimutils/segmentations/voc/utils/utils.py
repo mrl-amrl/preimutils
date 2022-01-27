@@ -9,6 +9,8 @@ import imutils
 import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
+from ..dataset import LabelMap
+
 
 
 def custom_to_voc(masks_dir, images_dir, target_dir):
