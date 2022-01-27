@@ -7,10 +7,10 @@ from glob import glob
 import cv2
 import imutils
 import numpy as np
-from imutils import contours
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 from ..dataset import LabelMap
+
 
 
 def custom_to_voc(masks_dir, images_dir, target_dir):
@@ -41,7 +41,7 @@ def custom_to_voc(masks_dir, images_dir, target_dir):
     label_map.append('background:0,0,0::')
     for i, color in enumerate(unique_colors):
         label_map.append('object{}:{},{},{}::'.format(
-            i+1, color[0], color[1], color[2]))
+            i + 1, color[0], color[1], color[2]))
     with open(os.path.join(target_dir, 'labelmap.txt'), 'w') as f:
         f.write('\n'.join(label_map))
     for mask in glob(os.path.join(masks_dir, '*.png')):
