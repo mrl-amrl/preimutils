@@ -5,16 +5,16 @@ import os
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-
+version='1.1.2'
 setup(
     name="preimutils",
     packages=find_packages(),
-    version='1.0.6',
+    version=version,
     description="All you need to prepare and preprocess your annotated images",
     long_description=long_description,
     long_description_content_type='text/markdown',
     url="https://github.com/mrl-amrl/preimutils",
-    download_url='https://github.com/mrl-amrl/preimutils/archive/1.0.6.tar.gz',
+    download_url='https://github.com/mrl-amrl/preimutils/archive/{}.tar.gz'.format(version),
     author="Amir Sharifi",
     author_email="ami_rsh@outlook.com",
     license='MIT',
@@ -31,7 +31,11 @@ setup(
         'imutils',
         'opencv-python',
         'imageio',
-        'pycocotools'
+        'pycocotools',
+        'shutils',
+        'xmltodict',
+        'numpy',
+        'matplotlib',
     ],
     zip_safe=False,
 )

@@ -6,3 +6,6 @@ imutils
 opencv-python
 imageio
 pycocotools
+shutils
+numpy
+xmltodict
