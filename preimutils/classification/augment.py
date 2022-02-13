@@ -28,18 +28,41 @@ class ClassificationAug:
         assert os.path.exists(images_dir), 'label_map.txt file not exist'
         self._images_dir = images_dir
         self.filters_of_aug = [
+            # flips
+            A.HorizontalFlip(p=0.25),
+            A.VerticalFlip(p=0.25),
+
+            # color augmentations
+            A.OneOf([
+                A.HueSaturationValue(p=1.),
+                A.RandomBrightnessContrast(p=1.),
+                A.RGBShift(p=1.)
+            ], p=0.25),
+
+            # image quality
+            A.OneOf([
+                A.GaussNoise(p=1.),
+                A.MultiplicativeNoise(p=1.),
+                A.JpegCompression(p=1.),
+                A.Downscale(scale_min=0.5,scale_max=0.99, p=1),
+            ], p=0.5),
+
+            # other
+            A.OneOf([
+                A.ToGray(p=1.),
+                A.RandomResizedCrop(height=IMAGE_SIZE[0], 
+                                                width=IMAGE_SIZE[1], 
+                                                p=1.),
+                
+            ], p=0.25),
 
             A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
                                shift_limit=0.1, p=1, border_mode=0),
-            A.RandomBrightnessContrast(p=0.2),
+
             A.RandomShadow(p=0.1),
             A.RandomSnow(snow_point_lower=0.1,
                          snow_point_upper=0.15, p=0.1),
-            A.RGBShift(p=0.2),
             A.CLAHE(p=0.2),
-
-            A.HueSaturationValue(
-                p=0.1, hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10),
 
             A.MotionBlur(p=0.1),
             A.MedianBlur(p=0.2),
@@ -89,7 +112,42 @@ class ClassificationAug:
         for image_path in tqdm(glob(os.path.join(self._images_dir, '*.{}'.format(self.images_extention))), desc='All images'):
             self.augment_image(image_path, count_of_each, resize, width, height)
 
+    def full_augment(self, dataset_path, each_class_count, images_extention='jpg'):
+        '''
+        Augment all classes in dataset_path so that you will have #each_class_count images for each class.
+
+        Classes must be like:
+        dataset_path/
+            class1/
+                image1.jpg
+                image2.jpg
+                .
+                .
+                .
+            class2/
+                image1.jpg
+                image2.jpg
+                .
+                .
+                .
+            class3/
+                image1.jpg
+                image2.jpg
+                .
+                .
+                .
+        '''
+        classes = os.listdir(dataset_path)
+
+        for c in classes:
+            images_path = os.path.join(dataset_path, c)
+            num_images = len(os.listdir(images_path))
+            each_image = each_class_count // num_images
+
+            self.auto_augmentation(each_image)
+
 if __name__ == '__main__':
     sample_image_path = 'path/to/your/images_dir'
     ClassificationAug(sample_image_path).auto_augmentation(10, resize=True, width=512, height=512)
+
 
