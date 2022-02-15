@@ -2,9 +2,10 @@ import os
 
 import albumentations as A
 import numpy as np
+from sklearn import utils
 from tqdm import tqdm
 
-from utils import augmented_images_write
+from .utils.utils import augmented_images_write
 
 
 class KPImageAug():
