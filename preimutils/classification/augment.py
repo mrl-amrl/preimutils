@@ -28,9 +28,9 @@ class ClassificationAug:
         assert os.path.exists(images_dir), 'label_map.txt file not exist'
         self._images_dir = images_dir
         self.filters_of_aug = [
-            # flips
-            A.HorizontalFlip(p=0.25),
-            A.VerticalFlip(p=0.25),
+#             # flips
+#             A.HorizontalFlip(p=0.25),
+#             A.VerticalFlip(p=0.25),
 
             # color augmentations
             A.OneOf([
