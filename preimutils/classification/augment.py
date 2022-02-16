@@ -47,7 +47,7 @@ class ClassificationAug:
                 A.Downscale(scale_min=0.5,scale_max=0.99, p=1),
             ], p=0.5),
 
-            A.ToGray(p=1.),
+            A.ToGray(p=0.05),
 
             A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
                                shift_limit=0.1, p=1, border_mode=0),
