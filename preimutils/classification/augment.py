@@ -65,6 +65,8 @@ class ClassificationAug:
             A.augmentations.geometric.transforms.PiecewiseAffine(
                 p=0.1, scale=(0.01, 0.02)),
             A.augmentations.transforms.Emboss(p=0.2),
+            A.augmentations.geometric.rotate.Rotate(limit=180, p=0.7),
+#             A.augmentations.geometric.rotate.RandomRotate90(
         ]
 
     def _get_aug(self, aug):
