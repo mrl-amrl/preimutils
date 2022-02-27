@@ -33,11 +33,11 @@ class ClassificationAug:
             A.VerticalFlip(p=0.1),
 
 #             # color augmentations
-#             A.OneOf([
-#                 A.HueSaturationValue(p=1.),
-#                 A.RandomBrightnessContrast(p=1.),
-#                 A.RGBShift(p=1.)
-#             ], p=0.25),
+            A.OneOf([
+                A.HueSaturationValue(p=1.),
+                A.RandomBrightnessContrast(p=1.),
+                A.RGBShift(p=1.)
+            ], p=0.25),
 
             # image quality
             A.OneOf([
@@ -49,8 +49,8 @@ class ClassificationAug:
 
             A.ToGray(p=0.05),
 
-#             A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
-#                                shift_limit=0.1, p=1, border_mode=0),
+            A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0,
+                               shift_limit=0.1, p=1, border_mode=0),
 
             A.RandomShadow(p=0.1),
             A.RandomSnow(snow_point_lower=0.1,
