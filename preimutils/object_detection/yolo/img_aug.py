@@ -19,7 +19,7 @@ class AMRLImageAug:
     Longer class information....
 
     Attributes:
-        xmls_dir: annotations files paths.
+        annotations_dir: annotations files paths.
         images_dir: images files paths.
     """
 
@@ -36,13 +36,13 @@ class AMRLImageAug:
         assert os.path.isdir(annotations_dir), 'annotations dir file not exist'
         assert os.path.isdir(images_dir), 'images dir not exist'
         mkdir_p(output_dir)
-        mkdir_p(os.path.join(output_dir, 'labels'))
+        mkdir_p(os.path.join(output_dir, 'annotations'))
         mkdir_p(os.path.join(output_dir, 'images'))
 
         self.annotations_dir = annotations_dir
         self.images_dir = images_dir
         self.output_dir = output_dir
-        self.output_labels_dir = os.path.join(output_dir, 'labels')
+        self.output_labels_dir = os.path.join(output_dir, 'annotations')
         self.output_image_dir = os.path.join(output_dir, 'images')
 
     def check_data(self, annotations_dir, images_dir):
@@ -161,17 +161,10 @@ class AMRLImageAug:
         Returns:
             No return
         """
-        labels_statistics = export_path_count_for_each_label(
-            self.xmls_dir, self.images_dir, self._categori_label_id.keys())
-        for label in tqdm(self._categori_label_id):
-            count = labels_statistics[label]['count']
-            xmls_paths = labels_statistics[label]['xmls_paths']
-            if not count:
-                continue
-            coefficient = count_of_each // count
-            print(coefficient)
-            for xml in xmls_paths:
-                try:
-                    self.augment_image(xml, coefficient, resize, width, height)
-                except ValueError as e:
-                    print('File {} except because {}'.format(xml, e))
+        images_list = os.listdir(self.images_dir)
+        txts_list = os.listdir(self.annotations_dir)
+
+        for i in tqdm(range(len(images_list))):
+            txt_name = os.path.join(self.annotations_dir, txts_list[i])
+            img_name = os.path.join(self.images_dir, images_list[i])
+            self.augment_image(txt_name, img_name, count_of_each, resize, width, height)
