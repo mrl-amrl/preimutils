@@ -4,7 +4,7 @@ import albumentations as A
 import numpy as np
 from tqdm import tqdm
 
-from utils import augmented_images_write
+from .utils import augmented_images_write
 
 
 class KPImageAug():

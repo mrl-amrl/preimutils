@@ -1,5 +1,5 @@
 import os
-from utils import jsonfile2dict
+from .utils import jsonfile2dict
 
 
 class COCO2YOLO:
@@ -79,9 +79,8 @@ class COCO2YOLO:
     def _save_txt(self, anno_dict):
         for k, v in anno_dict.items():
             ext_name = v[0][0].split(".")[-1]
-            file_name = v[0][0].split(".").replace(ext_name, 'txt')
+            file_name = v[0][0].replace(ext_name, '.txt')
             with open(os.path.join(self.output, file_name), 'w', encoding='utf-8') as f:
-                print(k, v)
                 for obj in v:
                     cat_name = self.coco_id_name_map.get(obj[1])
                     category_id = self.coco_name_list.index(cat_name)

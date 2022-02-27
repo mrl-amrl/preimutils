@@ -1,2 +1,2 @@
-import voc
-import yolo
+from . import voc
+from . import yolo
