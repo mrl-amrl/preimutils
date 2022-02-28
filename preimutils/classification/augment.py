@@ -30,7 +30,7 @@ class ClassificationAug:
         self.filters_of_aug = [
 #             # flips
 #             A.HorizontalFlip(p=0.25),
-            A.VerticalFlip(p=0.1),
+#             A.VerticalFlip(p=0.1),
 
 #             # color augmentations
             A.OneOf([
@@ -65,7 +65,7 @@ class ClassificationAug:
             A.augmentations.geometric.transforms.PiecewiseAffine(
                 p=0.1, scale=(0.01, 0.02)),
             A.augmentations.transforms.Emboss(p=0.2),
-            A.augmentations.geometric.rotate.Rotate(limit=180, p=0.7),
+#             A.augmentations.geometric.rotate.Rotate(limit=180, p=0.7),
 #             A.augmentations.geometric.rotate.RandomRotate90(
         ]
 
