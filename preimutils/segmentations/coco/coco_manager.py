@@ -36,9 +36,9 @@ class COCOHandler:
                 A.MedianBlur(p=0.2)]),
             A.ISONoise(p=0.2),
             A.Posterize(p=0.2),
-            A.IAAPerspective(p=0.1),
-            A.IAAPiecewiseAffine(p=0.1, scale=(0.01, 0.02)),
-            A.IAAEmboss(p=0.2),
+            A.Perspective(p=0.1),
+            A.PiecewiseAffine(p=0.1, scale=(0.01, 0.02)),
+            A.Emboss(p=0.2),
         ]
         self.aug = self.create_transformer(self.aug_filter)
 
