@@ -45,7 +45,7 @@ class SegmentationAug:
         self.label_handler = LabelMap(label_map_path)
 
         assert os.path.exists(
-            masks_dir), 'Masks path does not exist please check the path'
+                masks_dir), 'Masks path does not exist please check the path'
         self._masks_dir = masks_dir
 
         assert os.path.exists(
@@ -75,6 +75,42 @@ class SegmentationAug:
                 p=0.1, scale=(0.01, 0.02)),
             A.augmentations.transforms.Emboss(p=0.2),
         ]
+
+#         self.filters_of_aug = [
+
+#             A.HorizontalFlip(p=0.5),
+
+#             A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=0),
+
+#             A.augmentations.transforms.GaussNoise(p=0.2),
+#             A.augmentations.geometric.transforms.Perspective(p=0.5),
+#             A.RGBShift(p=0.2),
+#             A.OneOf(
+#                 [
+#                     A.CLAHE(p=1),
+#                     A.RandomBrightness(p=1),
+#                     A.RandomGamma(p=1),
+#                 ],
+#                 p=0.9,
+#             ),
+
+#             A.OneOf(
+#                 [
+#                     A.augmentations.transforms.Sharpen(p=1),
+#                     A.Blur(blur_limit=3, p=1),
+#                     A.MotionBlur(blur_limit=3, p=1),
+#                 ],
+#                 p=0.9,
+#             ),
+
+#             A.OneOf(
+#                 [
+#                     A.RandomContrast(p=1),
+#                     A.HueSaturationValue(p=1),
+#                 ],
+#                 p=0.9,
+#             ),
+#         ]
 
     def _get_aug(self, aug):
         return A.Compose(aug)

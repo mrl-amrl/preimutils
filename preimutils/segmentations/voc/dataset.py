@@ -164,6 +164,8 @@ class Dataset:
             utils.find_image_from_mask(
                 mask, self.images_dir, extention=self.images_extention)
 
+        return [self.images_dir, self.masks_dir, self.label_map_path]
+
     def seprate_dataset(self, shuffle=False, valid_persent=0.25, test_persent=None, save=True):
         """Seprate dataset to train.txt,trainval.txt,val.txt 
 
