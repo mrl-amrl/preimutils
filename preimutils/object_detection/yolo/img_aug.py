@@ -162,9 +162,11 @@ class AMRLImageAug:
             No return
         """
         images_list = os.listdir(self.images_dir)
-        txts_list = os.listdir(self.annotations_dir)
-
-        for i in tqdm(range(len(images_list))):
-            txt_name = os.path.join(self.annotations_dir, txts_list[i])
-            img_name = os.path.join(self.images_dir, images_list[i])
-            self.augment_image(txt_name, img_name, count_of_each, resize, width, height)
+        for image in tqdm(images_list):
+            if os.path.splitext(image)[0] + '.txt' in os.listdir(self.annotations_dir):
+                img_name = os.path.join(self.images_dir, image)
+                txt_name = os.path.join(self.annotations_dir, os.path.splitext(image)[0] + '.txt')
+                self.augment_image(txt_name, img_name, count_of_each, resize, width, height)
+            else:
+                print('{} not found in {}'.format(os.path.splitext(image)[0] + '.txt', self.annotations_dir))
+                continue
